@@ -1,6 +1,9 @@
 # OIT CR Scheduler
 
 # Parent classes
+import this
+import csv
+
 class Cons:
 
     #Instance attributes
@@ -24,6 +27,7 @@ class Shift:
 
 # Hassaan:
 # Reads CSV and creates Array of Workers #
+
 #
 # Day of the Week:
 # 0 = Sunday
