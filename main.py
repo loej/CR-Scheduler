@@ -1,5 +1,24 @@
 # OIT CR Scheduler
 
+# Parent classes
+class Cons:
+
+    #Instance attributes
+    def __init__(netID,schedule):
+        this.netID = netID
+        this.schedule = schedule
+
+class Shift:
+
+    #Instance attributes
+    def __init__(location,dayofWeek,start,end)
+        this.location =location
+        this.dayofWeek = dayofWeek
+        this.start  = start
+        this.end = end
+
+
+# Hassaan:
 # Reads CSV and creates Array of Workers #
 #
 # Day of the Week:
@@ -44,13 +63,18 @@
 
 
 #----------------------------------------------------------------------#
-
+# Joel:
 # prioritizeCons()
 # Sorts cons array based on if they work during supervisor hours and how many shifts they have
 #
 # Use sort method based off length of worker Schedule Array
 #
 # Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
+
+
+
+
+
 
 #----------------------------------------------------------------------#
 
@@ -61,6 +85,7 @@
 
 #----------------------------------------------------------------------#
 
+# Edler:
 # ranking()
 # count overlapping hours
 #  between all supervisors and cons
@@ -75,7 +100,3 @@
 # return highest ranking supervisor
 
 
-print('hello world')
-print('hello Edler')
-
-print('hello world edler was here')
