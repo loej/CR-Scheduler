@@ -75,7 +75,3 @@
 # return highest ranking supervisor
 
 
-print('hello world')
-print('hello Edler')
-
-print('hello world edler was here')
