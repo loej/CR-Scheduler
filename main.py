@@ -3,6 +3,7 @@
 # Parent classes
 import this
 import csv
+import config
 
 class Cons:
 
@@ -78,6 +79,9 @@ class Shift:
 # Use sort method based off length of worker Schedule Array
 #
 # Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
+
+def prioritizeCons():
+    global arr1[]
 
 
 
