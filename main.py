@@ -14,7 +14,7 @@ class Cons:
 class Shift:
 
     #Instance attributes
-    def __init__(location,dayofWeek,start,end)
+    def __init__(location,dayofWeek,start,end):
         this.location =location
         this.dayofWeek = dayofWeek
         this.start  = start
