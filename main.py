@@ -23,10 +23,64 @@ class Shift:
         self.start = start
         self.end = end
 
+class Sups:
+    # Instance attributes
+    def __init__(self, netID, schedule):
+        self.netID = netID
+        self.schedule = schedule
 
-# Hassaan:
+supRoster = []
+consRoster = []
+
+# Helper Methods
+def create_Shift(location,dayofWeek,start,end):
+ s = Shift
+ #Assigning Location
+ if "ARC" in location == True:
+     s.location = 0
+ if "BEST" in location == True:
+    s.location = 1
+ if "RBHS" in location == True:
+    s.location = 2
+ if "LSM" in location == True:
+    s.location = 3
+#Assigning DayofWeek
+ if dayofWeek == "Sunday":
+    s.dayOfWeek = 0
+ if dayofWeek == "Monday":
+    s.dayOfWeek = 1
+ if dayofWeek == "Tuesday":
+    s.dayOfWeek = 2
+ if dayofWeek == "Wednesday":
+    s.dayOfWeek = 3
+ if dayofWeek == "Thursday":
+    s.dayOfWeek = 4
+ if dayofWeek == "Friday":
+    s.dayOfWeek = 5
+ if dayofWeek == "Saturday":
+    s.dayOfWeek = 6
+ s.start = start
+ s.end = end;
+
+
+
 # Reads CSV and creates Array of Workers #
+with open("C:\\Users\\hassa\\Downloads\\Cons.csv") as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    prev = ""
+    for row in csv_reader: # Iterate through every row
+        if line_count != 0: # Make sure not the Top Column
+            if row[0] == "": #Error check in case netID field is empty
+                line_count+=1
+                continue
+            if row[0] != prev: # NetID is the same as last row
+                new = Cons
+                new.netID = row[0]  # Initialize netID
 
+            new.schedule.append(create_Shift(row[1], row[3], row[4], row[5]))  # Add Shift to the Schedule Array
+            consRoster.append(new)
+            line_count += 1
 #
 # Day of the Week:
 # 0 = Sunday
@@ -102,6 +156,28 @@ def prioritizeCons():
 # OIT CR Scheduler
 
 # Parent classes
+
+import csv
+import config
+import array
+
+
+class Cons:
+
+    # Instance attributes
+    def __init__(self,netID, schedule):
+        self.netID = netID
+        self.schedule = schedule
+
+
+class Shift:
+
+    # Instance attributes
+    def __init__(self,location, dayofWeek, start, end):
+        self.location = location
+        self.dayofWeek = dayofWeek
+        self.start = start
+        self.end = end
 
 
 # Hassaan:
