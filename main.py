@@ -5,11 +5,13 @@ import csv
 import config
 import array
 
+worker = []
+
 
 class Cons:
 
     # Instance attributes
-    def __init__(self,netID, schedule):
+    def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
 
@@ -17,7 +19,7 @@ class Cons:
 class Shift:
 
     # Instance attributes
-    def __init__(self,location, dayofWeek, start, end):
+    def __init__(self, location, dayofWeek, start, end):
         self.location = location
         self.dayofWeek = dayofWeek
         self.start = start
@@ -72,13 +74,30 @@ class Shift:
 #
 # Use sort method based off length of worker Schedule Array
 #
+
 # Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
 
-def prioritizeCons():
-    worker = array([1,2,3])
-    print(worker)
-# ----------------------------------------------------------------------#
+# Made Worker class and set the proper parameters
 
+def prioritizecons(worker):
+
+    # Conventional hours a supervisor would work in military time. (8:00am - 10:00pm)
+    hourMorningSup = 800
+    hourNightSup = 2200
+
+    for i in worker:
+        if (i >= hourMorningSup) and (i <= hourNightSup):
+            conAvailable = netID
+            message = "The consultant available during today's hours are: "
+            print( message + str(conAvailable))
+        else:
+            conAvailable = netID
+            message = "Find another time for these consultants: "
+            print(message + str(conAvailable))
+
+
+
+# ----------------------------------------------------------------------#
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 #
@@ -102,4 +121,6 @@ def prioritizeCons():
 # OIT CR Scheduler
 
 
-## Main Function ##
+## Adding times and netIDs"
+worker = ['albelee, 1100, 1200']
+prioritizecons(worker)
