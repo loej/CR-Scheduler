@@ -1,29 +1,27 @@
 # OIT CR Scheduler
 
 # Parent classes
-import this
 import csv
 import config
+import array
+
 
 class Cons:
 
-    #Instance attributes
-    def __init__(netID,schedule):
-        this.netID = netID
-        this.schedule = schedule
+    # Instance attributes
+    def __init__(self,netID, schedule):
+        self.netID = netID
+        self.schedule = schedule
+
 
 class Shift:
 
-    #Instance attributes
-    def __init__(location,dayofWeek,start,end):
-        this.location =location
-        this.dayofWeek = dayofWeek
-        this.start  = start
-        this.end = end
-
-
-
-
+    # Instance attributes
+    def __init__(self,location, dayofWeek, start, end):
+        self.location = location
+        self.dayofWeek = dayofWeek
+        self.start = start
+        self.end = end
 
 
 # Hassaan:
@@ -50,7 +48,7 @@ class Shift:
 #
 # i.e. 1:30PM = 1330
 
-#----------------------------------------------------------------------#
+# ----------------------------------------------------------------------#
 
 # Worker and Shift
 # WORKER:
@@ -67,11 +65,7 @@ class Shift:
 # + method(type): type
 
 
-
-
-
-
-#----------------------------------------------------------------------#
+# ----------------------------------------------------------------------#
 # Joel:
 # prioritizeCons()
 # Sorts cons array based on if they work during supervisor hours and how many shifts they have
@@ -81,19 +75,16 @@ class Shift:
 # Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
 
 def prioritizeCons():
-    global arr1[]
-
-
-
-
-
-
-#----------------------------------------------------------------------#
+    worker = array([1,2,3])
+    print(worker)
+# ----------------------------------------------------------------------#
 
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 #
 # Go through cons list sequentially. For each cons, go through supervisor list.
+
+# ----------------------------------------------------------------------#
 def Assignment():
     supFocusedIndex=0;
     for i in range(0,len(consRoster)):
