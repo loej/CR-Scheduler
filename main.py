@@ -94,7 +94,13 @@ def prioritizeCons():
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 #
 # Go through cons list sequentially. For each cons, go through supervisor list.
-
+def Assignment():
+    supFocusedIndex=0;
+    for i in range(0,len(consRoster)):
+        supFocusedIndex=ranking(consRoster[i]);
+        supRoster[supFocusedIndex].assignedCons.append(consRoster[i].netID);
+    for i in range(0,len(supRoster)):
+        print(supRoster[i].netID,': ',*supRoster[i].assignedCons,sep=", ");
 #----------------------------------------------------------------------#
 
 # Edler:
@@ -109,6 +115,27 @@ def prioritizeCons():
 #
 # difference in number of consultants assigned to supervisor and consultant threshold (x3)
 #
-# return highest ranking supervisor
+# return index of highest ranking supervisor
+
+def ranking(consultant):
+    supCount=len(supRoster);
+    rankingArray = [0]*supCount;
+    siteWeight= [10,4,6,8];
+    tempMax=0;
+    max=0;
+    supIndex=0;
+    #initalvalues for rankingArray
+    for i in range(0,supCount):
+        rankingArray[i]=rankingArray[i]+(len(rankingArray[i].assignedCons)-consultantThreshold)*3;
+    for i in range(0,len(consultant.Schedule)):
+        focusedShift=consultant.Schedule[i];
+        for a in range(0,supCount):
+            if(1==supRoster[a].Schedule[focusedShift.Day][0]):
+                for hour in range(focusedShift.start+1,focusedShift.end+1):
+                    if(supRoster[a].Schedule[focusedShift.Day][hour]):
+                        rankingArray[a]=rankingArray[a]+1+siteWeight[focusedShift.Location];
+    supIndex,max=max(rankingArray,key=lambda item:item[1]);
+    return supIndex;
+
 
 
