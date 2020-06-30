@@ -103,28 +103,6 @@ def prioritizeCons():
 
 # Parent classes
 
-import csv
-import config
-import array
-
-
-class Cons:
-
-    # Instance attributes
-    def __init__(self,netID, schedule):
-        self.netID = netID
-        self.schedule = schedule
-
-
-class Shift:
-
-    # Instance attributes
-    def __init__(self,location, dayofWeek, start, end):
-        self.location = location
-        self.dayofWeek = dayofWeek
-        self.start = start
-        self.end = end
-
 
 # Hassaan:
 # Reads CSV and creates Array of Workers #
