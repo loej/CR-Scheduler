@@ -82,7 +82,7 @@ class Shift:
 def prioritizecons(worker):
 
     # Conventional hours a supervisor would work in military time. (8:00am - 10:00pm)
-    hourMorningSup = 800
+    hourMorningSup = 1800
     hourNightSup = 2200
 
     for i in worker:
