@@ -2,7 +2,6 @@
 
 # Parent classes
 import csv
-import config
 
 
 class Cons:
@@ -91,7 +90,7 @@ def convert24(str1, check):
 # Reads CSV and creates Array of Workers #
 #def read_CSV() :
 
-with open("C:\\Users\\hassa\\Downloads\\Cons.csv") as csv_file:
+with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count=0
     prev = ""
