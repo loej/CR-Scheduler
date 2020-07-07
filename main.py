@@ -253,7 +253,7 @@ def ranking(consultant):
                         rankingArray[a]=rankingArray[a]+1+siteWeight[focusedShift.Location];
     supIndex,max=max(rankingArray,key=lambda item:item[1]);
     return supIndex;
-
+#hello
 
 ## Adding times and netIDs"
 worker = ['albelee, 1100, 1200']
