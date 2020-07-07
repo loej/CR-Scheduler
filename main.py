@@ -104,7 +104,7 @@ with open("C:\\Users\\hassa\\Downloads\\Cons.csv") as csv_file:
                 continue
             if row[0]!= prev: # NetID is the same as last row
                 if prev!= "":
-                    consRoster.append(new)
+                    consRoster.append(Cons(new.netID,new.schedule))
                     prev = new.netID
                 new = Cons
                 print(row[0])
