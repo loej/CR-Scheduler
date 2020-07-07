@@ -79,13 +79,13 @@ def convert24(str1, check):
         if check == 1: # Check if Start Time, then go to Ceiling
             x = int(str1[-4:-2])
             if int(str1[-4:-2]) > 0:
-                return str(int(str2)+1)
-        return str2
+                return int(str2)+1
+        return int(str2)
 
     if check == 1: # Check if Start Time, then go to Ceiling
         if int(str1[-4:-2]) > 0:
-             return str(int(str[:-5])+1)
-    return str[:-5]
+             return int(str[:-5])+1
+    return int(str[:-5])
 
 # Hassaan
 # Reads CSV and creates Array of Workers #
