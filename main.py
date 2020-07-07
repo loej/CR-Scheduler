@@ -27,7 +27,6 @@ class Shift:
         self.dayofWeek=shiftCopy.dayofWeek
         self.start=shiftCopy.start
         self.end=shiftCopy.end
-
 class Sups:
     # Instance attributes
     def __init__(self, netID, schedule):
@@ -42,7 +41,7 @@ consRoster = []
 
 # Helper Methods
 def create_Shift(location,dayofWeek,start,end):
- s = Shift()
+ s = Shift
  #Assigning Location
  if "ARC" in location:
      s.location = 0
@@ -54,22 +53,22 @@ def create_Shift(location,dayofWeek,start,end):
     s.location = 3
 #Assigning DayofWeek
  if dayofWeek == "Sunday":
-    s.dayOfWeek = 0
+    s.dayofWeek = 0
  if dayofWeek == "Monday":
-    s.dayOfWeek = 1
+    s.dayofWeek = 1
  if dayofWeek == "Tuesday":
-    s.dayOfWeek = 2
+    s.dayofWeek = 2
  if dayofWeek == "Wednesday":
-    s.dayOfWeek = 3
+    s.dayofWeek = 3
  if dayofWeek == "Thursday":
-    s.dayOfWeek = 4
+    s.dayofWeek = 4
  if dayofWeek == "Friday":
-    s.dayOfWeek = 5
+    s.dayofWeek = 5
  if dayofWeek == "Saturday":
-    s.dayOfWeek = 6
+    s.dayofWeek = 6
  s.start = convert24(start,1)
  s.end = convert24(end,0)
- return [s.location,s.dayOfWeek,s.start,s.end]
+ return [s.location,s.dayofWeek,s.start,s.end]
 # ------------------------------------->
 #Converting 12 Hour to 24 Hour Format
 def convert24(str1, check):
@@ -269,22 +268,3 @@ def ranking(consultant):
     return supIndex;
 #hello
 
-<<<<<<< HEAD
-
-if __name__ == '__main__':
-    # Shifts
-    shift3 = Consultant('emo', 0, 1, 10, 22)
-    shift2 = Consultant('albelee', 0, 1, 9, 19)
-    shift1 = Consultant('jfm203', 0, 1, 10, 18)
-    shift4 = Consultant('dan', 0, 1, 100, 1000)
-
-    shiftSup = Consultant('winnie', 2, 2, 20, 22)
-
-    lstSup = [shiftSup]
-    lst = [shift1, shift2, shift3, shift4]
-    prioritizecons(lst, lstSup)
-=======
-## Adding times and netIDs"
-worker = ['albelee, 1100, 1200']
-prioritizecons(worker)
->>>>>>> 38448e926ec81e937a1fe56842f309984d7cf50e
