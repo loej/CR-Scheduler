@@ -22,6 +22,12 @@ class Shift:
         self.start = start
         self.end = end
 
+    def copy(self,shiftCopy):
+        self.location=shiftCopy.location
+        self.dayofWeek=shiftCopy.dayofWeek
+        self.start=shiftCopy.start
+        self.end=shiftCopy.end
+
 class Sups:
     # Instance attributes
     def __init__(self, netID, schedule):
@@ -36,7 +42,7 @@ consRoster = []
 
 # Helper Methods
 def create_Shift(location,dayofWeek,start,end):
- s = Shift
+ s = Shift()
  #Assigning Location
  if "ARC" in location:
      s.location = 0
@@ -63,7 +69,8 @@ def create_Shift(location,dayofWeek,start,end):
     s.dayOfWeek = 6
  s.start = convert24(start,1)
  s.end = convert24(end,0)
- return s
+ temp = Shift(s)
+ return temp
 # ------------------------------------->
 #Converting 12 Hour to 24 Hour Format
 def convert24(str1, check):
@@ -209,29 +216,6 @@ def prioritizecons(lstCons, lstSup):
     finalList = scheduledCons + unscheduledCons
     print('The final list of consultants:' + str(finalList))
     return finalList
-
-import csv
-import config
-import array
-
-
-class Cons:
-
-    # Instance attributes
-    def __init__(self,netID, schedule):
-        self.netID = netID
-        self.schedule = schedule
-
-
-class Shift:
-
-    # Instance attributes
-    def __init__(self,location, dayofWeek, start, end):
-        self.location = location
-        self.dayofWeek = dayofWeek
-        self.start = start
-        self.end = end
-
 
 # ----------------------------------------------------------------------#
 # Assignment ()
