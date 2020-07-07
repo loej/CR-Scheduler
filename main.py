@@ -3,9 +3,6 @@
 # Parent classes
 import csv
 import config
-import array
-
-worker = []
 
 
 class Cons:
@@ -18,7 +15,7 @@ class Cons:
 
 class Shift:
 
-    # Instance attributes
+    # Instance attributes, all integers
     def __init__(self, location, dayofWeek, start, end):
         self.location = location
         self.dayofWeek = dayofWeek
@@ -47,7 +44,7 @@ class Shift:
 #
 # Start/End:
 # 4 digit 24 hour integer
-#
+# (0-23)
 # i.e. 1:30PM = 1330
 
 # ----------------------------------------------------------------------#
@@ -71,30 +68,62 @@ class Shift:
 # Joel:
 # prioritizeCons()
 # Sorts cons array based on if they work during supervisor hours and how many shifts they have
-#
 # Use sort method based off length of worker Schedule Array
-#
-
 # Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
+# Which cons do not work during supervisor hours ?? => 10:00pm - 2:00 am
 
-# Made Worker class and set the proper parameters
 
-def prioritizecons(worker):
-
+def prioritizecons(lstCons, lstSup):
     # Conventional hours a supervisor would work in military time. (8:00am - 10:00pm)
-    hourMorningSup = 1800
-    hourNightSup = 2200
+    # Count total amount of hours a cons works in a week
+    # if they have 1 shift per week during supervisor hours
+    # if they don't have at least 1 shift they would go back to the back of the list
+    # If they DO have at least one shift => Are ordered based off how many hours they work a week
+    # The one with the lowest number of hours list[0]
 
-    for i in worker:
-        if (i >= hourMorningSup) and (i <= hourNightSup):
-            conAvailable = netID
-            message = "The consultant available during today's hours are: "
-            print( message + str(conAvailable))
+    # Use 24hr military time => 9 == 9:00am | 22 == 10:00pm
+    # Note: There is ALWAYS going to be a supervisor/management during these times.
+    startTime = 9
+    endTime = 22
+
+    # Boolean to check of they have a supervisor during the hours
+    # haveSup = False ???
+
+    # List of all Scheduled consultants
+    scheduledCons = []
+    # List of all Unscheduled consultants
+    unscheduledCons = []
+
+    # print('The total amount of shifts are: ' + str(shiftCount) + '.')
+
+    for obj in lstCons:
+        # print(obj.location, obj.dayofWeek, obj.start, obj.end) #
+        # Checks if the start and end time are within supervisor hours
+        if (obj.start >= startTime) and (obj.end <= endTime):
+            # Total hours worked:
+            # sepSched = 'Scheduled Consultants: '
+            hoursWorked = obj.end - obj.start
+            # scheduledCons.append(sepSched)
+            scheduledCons.append(obj.netID)
+            scheduledCons.append(hoursWorked)
+            # print("The Scheduled consultants are: " + str(scheduledCons))
+            for supObj in lstSup:
+                if (supObj.location == obj.location) and (supObj.dayofWeek == obj.dayofWeek):
+                    break
+            print(str(supObj.netID) + ' ' + str(obj.netID) + ' ' + str(obj.dayofWeek))
+
         else:
-            conAvailable = netID
-            message = "Find another time for these consultants: "
-            print(message + str(conAvailable))
+            sep = 'Unscheduled Consultants: '
+            unscheduledCons.append(sep)
+            nightHoursWorked = obj.end - obj.start
+            unscheduledCons.append(obj.netID)
+            unscheduledCons.append(nightHoursWorked)
+            # print('The Unscheduled consultants are: ' + str(unscheduledCons))
 
+    # Combining both scheduled and unscheduled consultants
+    finalList = scheduledCons + unscheduledCons
+    print('The final list of consultants:' + str(finalList))
+    return finalList
 
 
 # ----------------------------------------------------------------------#
@@ -105,18 +134,20 @@ def prioritizecons(worker):
 
 # ----------------------------------------------------------------------#
 def Assignment():
-    supFocusedIndex=0;
-    for i in range(0,len(consRoster)):
-        supFocusedIndex=ranking(consRoster[i]);
-        supRoster[supFocusedIndex].assignedCons.append(consRoster[i].netID);
-    for i in range(0,len(supRoster)):
-        print(supRoster[i].netID,': ',*supRoster[i].assignedCons,sep=", ");
-#----------------------------------------------------------------------#
+    supFocusedIndex = 0
+    for i in range(0, len(consRoster)):
+        supFocusedIndex = ranking(consRoster[i])
+        supRoster[supFocusedIndex].assignedCons.append(consRoster[i].netID)
+    for i in range(0, len(supRoster)):
+        print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
+
+
+# ----------------------------------------------------------------------#
 
 # Edler:
 # ranking()
 # count overlapping hours
-#  between all supervisors and cons
+# between all supervisors and cons
 #
 # overlapping ARC? +10
 # overlapping LSM? +8
@@ -128,30 +159,35 @@ def Assignment():
 # return index of highest ranking supervisor
 
 def ranking(consultant):
-    supCount=len(supRoster);
-    rankingArray = [0]*supCount;
-    siteWeight= [10,4,6,8];
-    tempMax=0;
-    max=0;
-    supIndex=0;
-    #initalvalues for rankingArray
-    for i in range(0,supCount):
-        rankingArray[i]=rankingArray[i]+(len(rankingArray[i].assignedCons)-consultantThreshold)*3;
-    for i in range(0,len(consultant.Schedule)):
-        focusedShift=consultant.Schedule[i];
-        for a in range(0,supCount):
-            if(1==supRoster[a].Schedule[focusedShift.Day][0]):
-                for hour in range(focusedShift.start+1,focusedShift.end+1):
-                    if(supRoster[a].Schedule[focusedShift.Day][hour]):
-                        rankingArray[a]=rankingArray[a]+1+siteWeight[focusedShift.Location];
-    supIndex,max=max(rankingArray,key=lambda item:item[1]);
+    supCount = len(supRoster);
+    rankingArray = [0] * supCount;
+    siteWeight = [10, 4, 6, 8];
+    tempMax = 0;
+    max = 0;
+    supIndex = 0;
+    # initalvalues for rankingArray
+    for i in range(0, supCount):
+        rankingArray[i] = rankingArray[i] + (len(rankingArray[i].assignedCons) - consultantThreshold) * 3;
+    for i in range(0, len(consultant.Schedule)):
+        focusedShift = consultant.Schedule[i];
+        for a in range(0, supCount):
+            if (1 == supRoster[a].Schedule[focusedShift.Day][0]):
+                for hour in range(focusedShift.start + 1, focusedShift.end + 1):
+                    if (supRoster[a].Schedule[focusedShift.Day][hour]):
+                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
+    supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
 
 
+if __name__ == '__main__':
+    # Shifts
+    shift3 = Consultant('emo', 0, 1, 10, 22)
+    shift2 = Consultant('albelee', 0, 1, 9, 19)
+    shift1 = Consultant('jfm203', 0, 1, 10, 18)
+    shift4 = Consultant('dan', 0, 1, 100, 1000)
 
-<<<<<<< HEAD
-## Adding times and netIDs"
-worker = ['albelee, 1100, 1200']
-prioritizecons(worker)
-=======
->>>>>>> bf09418809c35e1b59500719788fa1490f6f5ba0
+    shiftSup = Consultant('winnie', 2, 2, 20, 22)
+
+    lstSup = [shiftSup]
+    lst = [shift1, shift2, shift3, shift4]
+    prioritizecons(lst, lstSup)
