@@ -69,9 +69,7 @@ def create_Shift(location,dayofWeek,start,end):
     s.dayOfWeek = 6
  s.start = convert24(start,1)
  s.end = convert24(end,0)
- temp = Shift()
- temp.copy(s)
- return temp
+ return [s.location,s.dayOfWeek,s.start,s.end]
 # ------------------------------------->
 #Converting 12 Hour to 24 Hour Format
 def convert24(str1, check):
@@ -113,8 +111,8 @@ with open("C:\\Users\\hassa\\Downloads\\Cons.csv") as csv_file:
                 print(row[0])
                 new.netID = row[0]  # Initialize netID
                 new.schedule = []
-            s= create_Shift(row[1], row[3], row[4], row[5])
-            new.schedule.append(s)  # Add Shift to the Schedule Array
+            [temp1,temp2,temp3,temp4]= create_Shift(row[1], row[3], row[4], row[5])
+            new.schedule.append(Shift(temp1,temp2,temp3,temp4))  # Add Shift to the Schedule Array
             prev=new.netID
         line_count+=1
     for x in consRoster:
