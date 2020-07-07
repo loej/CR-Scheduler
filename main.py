@@ -35,10 +35,13 @@ supRoster = []
 consRoster = []
 
 # Helper Methods
+
+
+# Helper Methods
 def create_Shift(location,dayofWeek,start,end):
  s = Shift
  #Assigning Location
- if "ARC" in location == True:
+ if "ARC" in location:
      s.location = 0
  if "BEST" in location == True:
     s.location = 1
@@ -61,28 +64,56 @@ def create_Shift(location,dayofWeek,start,end):
     s.dayOfWeek = 5
  if dayofWeek == "Saturday":
     s.dayOfWeek = 6
- s.start = start
- s.end = end;
+ s.start = convert24(start,1)
+ s.end = convert24(end,0)
+ return s
+# ------------------------------------->
+#Converting 12 Hour to 24 Hour Format
+def convert24(str1, check):
+    # Checking if last two elements of time is AM
+    if str1[-2:] == "PM" :
+        # add 12 to hours and remove PM
+        str2 = str(int(str1[:-5]) + 12)
+        if check == 1: # Check if Start Time, then go to Ceiling
+            x = int(str1[-4:-2])
+            if int(str1[-4:-2]) > 0:
+                return str(int(str2)+1)
+        return str2
 
+    if check == 1: # Check if Start Time, then go to Ceiling
+        if int(str1[-4:-2]) > 0:
+             return str(int(str[:-5])+1)
+    return str[:-5]
 
-
+# Hassaan
 # Reads CSV and creates Array of Workers #
+#def read_CSV() :
+
 with open("C:\\Users\\hassa\\Downloads\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count = 0
+    line_count=0
     prev = ""
     for row in csv_reader: # Iterate through every row
         if line_count != 0: # Make sure not the Top Column
+            print(row[0])
             if row[0] == "": #Error check in case netID field is empty
                 line_count+=1
+               # print("hello world")
                 continue
-            if row[0] != prev: # NetID is the same as last row
+            if row[0]!= prev: # NetID is the same as last row
+                if prev!= "":
+                    consRoster.append(new)
+                    prev = new.netID
                 new = Cons
+                print(row[0])
                 new.netID = row[0]  # Initialize netID
-
-            new.schedule.append(create_Shift(row[1], row[3], row[4], row[5]))  # Add Shift to the Schedule Array
-            consRoster.append(new)
-            line_count += 1
+                new.schedule = []
+            s= create_Shift(row[1], row[3], row[4], row[5])
+            new.schedule.append(s)  # Add Shift to the Schedule Array
+            prev=new.netID
+        line_count+=1
+    for x in consRoster:
+        print(x.netID)
 #
 # Day of the Week:
 # 0 = Sunday
@@ -224,10 +255,6 @@ def ranking(consultant):
     return supIndex;
 
 
-
-<<<<<<< HEAD
 ## Adding times and netIDs"
 worker = ['albelee, 1100, 1200']
 prioritizecons(worker)
-=======
->>>>>>> bf09418809c35e1b59500719788fa1490f6f5ba0
