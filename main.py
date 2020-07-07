@@ -69,7 +69,8 @@ def create_Shift(location,dayofWeek,start,end):
     s.dayOfWeek = 6
  s.start = convert24(start,1)
  s.end = convert24(end,0)
- temp = Shift(s)
+ temp = Shift()
+ temp.copy(s)
  return temp
 # ------------------------------------->
 #Converting 12 Hour to 24 Hour Format
