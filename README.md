@@ -10,7 +10,7 @@ This program schedules consultants and supervisors for a Consultant Review meeti
 
 * Have the latest version of [Python installed](https://www.python.org/downloads/). This program is written in ```Python 3.8.X```. 
 * Install [Git](https://git-scm.com/) to clone this repository and update live changes to the script.
-* A [Text Editor or an IDE](https://www.fullstackpython.com/text-editors-ides.html) to edit the program. If the docuemenation below is not detailed enough or any confusion arises make sure to visit the official [Python Documentation](https://docs.python.org/3/). 
+* Install a [Text Editor or an IDE](https://www.fullstackpython.com/text-editors-ides.html) to edit the program. 
 
 ## Installation 
 Using the terminal install the program by simply cloning the repository:
@@ -28,5 +28,19 @@ List all the documents in the CR-Scheduler Directory:
 Now you should be able to view all the files. The file with the script is `main.py`. You can now open this folder or file using your IDE/Text Editor of choice. 
 
 ## Documentation 
+* While reviewing the program the team highly recommends having a basic understanding in basic programming concepts. Please visit the [Python Documentation](https://docs.python.org/3/) if any concepts remain unclear. 
+  
+The CR Scheduler is written using four different methods:
 
+* readCSV()
+* prioritizeConsultants()
+* assignSupervisor()
+* rankingConsultants()
 
+### readCSV()
+
+### prioritizeConsultants()
+
+### assignSupervisor()
+
+### rankingConsultants()
