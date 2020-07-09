@@ -6,6 +6,17 @@ This program schedules consultants and supervisors for a Consultant Review meeti
 * assignSupervisor()
 * rankingConsultants()
 
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Documentation](#documentation)
+  - [readCSV()](#readcsv)
+  - [prioritizeConsultants()](#prioritizeconsultants)
+  - [assignSupervisor()](#assignsupervisor)
+  - [rankingConsultants()](#rankingconsultants)
+
 ## Dependencies
 
 * Have the latest version of [Python installed](https://www.python.org/downloads/). This program is written in ```Python 3.8.X```. 
@@ -38,9 +49,13 @@ The CR Scheduler is written using four different methods:
 * rankingConsultants()
 
 ### readCSV()
+  - wip 
 
 ### prioritizeConsultants()
-
+  - wip 
+  
 ### assignSupervisor()
-
+  - wip 
+  
 ### rankingConsultants()
+  - wip 

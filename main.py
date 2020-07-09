@@ -90,8 +90,8 @@ def convert24(str1, check):
 
     if check == 1:  # Check if Start Time, then go to Ceiling
         if int(str1[-4:-2]) > 0:
-            return int(str[:-5]) + 1
-    return int(str[:-5])
+            return int(str1[:-5]) + 1
+    return int(str1[:-5])
 
 
 # ------------------------------------->
