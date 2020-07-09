@@ -21,100 +21,109 @@ class Shift:
         self.start = start
         self.end = end
 
-    def copy(self,shiftCopy):
-        self.location=shiftCopy.location
-        self.dayofWeek=shiftCopy.dayofWeek
-        self.start=shiftCopy.start
-        self.end=shiftCopy.end
+    def copy(self, shiftCopy):
+        self.location = shiftCopy.location
+        self.dayofWeek = shiftCopy.dayofWeek
+        self.start = shiftCopy.start
+        self.end = shiftCopy.end
+
+
 class Sups:
     # Instance attributes
     def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
 
+
 supRoster = []
 consRoster = []
 
+
 # Helper Methods
 
 
 # Helper Methods
-def create_Shift(location,dayofWeek,start,end):
- s = Shift
- #Assigning Location
- if "ARC" in location:
-     s.location = 0
- if "BEST" in location == True:
-    s.location = 1
- if "RBHS" in location == True:
-    s.location = 2
- if "LSM" in location == True:
-    s.location = 3
-#Assigning DayofWeek
- if dayofWeek == "Sunday":
-    s.dayofWeek = 0
- if dayofWeek == "Monday":
-    s.dayofWeek = 1
- if dayofWeek == "Tuesday":
-    s.dayofWeek = 2
- if dayofWeek == "Wednesday":
-    s.dayofWeek = 3
- if dayofWeek == "Thursday":
-    s.dayofWeek = 4
- if dayofWeek == "Friday":
-    s.dayofWeek = 5
- if dayofWeek == "Saturday":
-    s.dayofWeek = 6
- s.start = convert24(start,1)
- s.end = convert24(end,0)
- return [s.location,s.dayofWeek,s.start,s.end]
+def create_Shift(location, dayofWeek, start, end):
+    s = Shift
+    # Assigning Location
+    if "ARC" in location:
+        s.location = 0
+    if "BEST" in location == True:
+        s.location = 1
+    if "RBHS" in location == True:
+        s.location = 2
+    if "LSM" in location == True:
+        s.location = 3
+    # Assigning DayofWeek
+    if dayofWeek == "Sunday":
+        s.dayofWeek = 0
+    if dayofWeek == "Monday":
+        s.dayofWeek = 1
+    if dayofWeek == "Tuesday":
+        s.dayofWeek = 2
+    if dayofWeek == "Wednesday":
+        s.dayofWeek = 3
+    if dayofWeek == "Thursday":
+        s.dayofWeek = 4
+    if dayofWeek == "Friday":
+        s.dayofWeek = 5
+    if dayofWeek == "Saturday":
+        s.dayofWeek = 6
+    s.start = convert24(start, 1)
+    s.end = convert24(end, 0)
+    return [s.location, s.dayofWeek, s.start, s.end]
+
+
 # ------------------------------------->
-#Converting 12 Hour to 24 Hour Format
+# Converting 12 Hour to 24 Hour Format
 def convert24(str1, check):
     # Checking if last two elements of time is AM
-    if str1[-2:] == "PM" :
+    if str1[-2:] == "PM":
         # add 12 to hours and remove PM
         str2 = str(int(str1[:-5]) + 12)
-        if check == 1: # Check if Start Time, then go to Ceiling
+        if check == 1:  # Check if Start Time, then go to Ceiling
             x = int(str1[-4:-2])
             if int(str1[-4:-2]) > 0:
-                return int(str2)+1
+                return int(str2) + 1
         return int(str2)
 
-    if check == 1: # Check if Start Time, then go to Ceiling
+    if check == 1:  # Check if Start Time, then go to Ceiling
         if int(str1[-4:-2]) > 0:
-             return int(str[:-5])+1
+            return int(str[:-5]) + 1
     return int(str[:-5])
+
 
 # Hassaan
 # Reads CSV and creates Array of Workers #
-#def read_CSV() :
+# def read_CSV() :
 
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count=0
+    line_count = 0
     prev = ""
-    for row in csv_reader: # Iterate through every row
-        if line_count != 0: # Make sure not the Top Column
+    for row in csv_reader:  # Iterate through every row
+        if line_count != 0:  # Make sure not the Top Column
             print(row[0])
-            if row[0] == "": #Error check in case netID field is empty
-                line_count+=1
-               # print("hello world")
+            if row[0] == "":  # Error check in case netID field is empty
+                line_count += 1
+                # print("hello world")
                 continue
-            if row[0]!= prev: # NetID is the same as last row
-                if prev!= "":
-                    consRoster.append(Cons(new.netID,new.schedule))
+            if row[0] != prev:  # NetID is the same as last row
+                if prev != "":
+                    consRoster.append(Cons(new.netID, new.schedule))
                     prev = new.netID
                 new = Cons
                 print(row[0])
                 new.netID = row[0]  # Initialize netID
                 new.schedule = []
-            [temp1,temp2,temp3,temp4]= create_Shift(row[1], row[3], row[4], row[5])
-            new.schedule.append(Shift(temp1,temp2,temp3,temp4))  # Add Shift to the Schedule Array
-            prev=new.netID
-        line_count+=1
+            [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
+            new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
+            prev = new.netID
+        line_count += 1
     for x in consRoster:
         print(x.netID)
+
+
 #
 # Day of the Week:
 # 0 = Sunday
@@ -214,6 +223,7 @@ def prioritizecons(lstCons, lstSup):
     print('The final list of consultants:' + str(finalList))
     return finalList
 
+
 # ----------------------------------------------------------------------#
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
@@ -265,5 +275,4 @@ def ranking(consultant):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
-#hello
-
+# hello
