@@ -12,9 +12,16 @@ class Cons:
         self.schedule = schedule
 
 
+class Sups:
+    # Instance attributes
+    def __init__(self, netID, schedule):
+        self.netID = netID
+        self.schedule = schedule
+
+
 class Shift:
 
-    # Instance attributes, all integers
+    # Instance attributes; all integers.
     def __init__(self, location, dayofWeek, start, end):
         self.location = location
         self.dayofWeek = dayofWeek
@@ -28,31 +35,25 @@ class Shift:
         self.end = shiftCopy.end
 
 
-class Sups:
-    # Instance attributes
-    def __init__(self, netID, schedule):
-        self.netID = netID
-        self.schedule = schedule
-
-
+# Global Variables
+startTime = 9
+endTime = 22
 supRoster = []
 consRoster = []
 
 
-# Helper Methods
-
-
-# Helper Methods
+# ------------------------------------->
+# Helper Method.
 def create_Shift(location, dayofWeek, start, end):
     s = Shift
     # Assigning Location
     if "ARC" in location:
         s.location = 0
-    if "BEST" in location == True:
+    if "BEST" in location:
         s.location = 1
-    if "RBHS" in location == True:
+    if "RBHS" in location:
         s.location = 2
-    if "LSM" in location == True:
+    if "LSM" in location:
         s.location = 3
     # Assigning DayofWeek
     if dayofWeek == "Sunday":
@@ -93,6 +94,7 @@ def convert24(str1, check):
     return int(str[:-5])
 
 
+# ------------------------------------->
 # Hassaan
 # Reads CSV and creates Array of Workers #
 # def read_CSV() :
@@ -124,7 +126,7 @@ with open(".\\Cons.csv") as csv_file:
         print(x.netID)
 
 
-#
+# ------------------------------------->
 # Day of the Week:
 # 0 = Sunday
 # 1 =Monday
@@ -139,14 +141,12 @@ with open(".\\Cons.csv") as csv_file:
 # 1 = BEST
 # 2 = Kessler
 # 3 = LSM
-#
 # Start/End:
 # 4 digit 24 hour integer
 # (0-23)
 # i.e. 1:30PM = 1330
 
-# ----------------------------------------------------------------------#
-
+# ------------------------------------->
 # Worker and Shift
 # WORKER:
 # + NetID (String)
@@ -162,39 +162,19 @@ with open(".\\Cons.csv") as csv_file:
 # + method(type): type
 
 
-# ----------------------------------------------------------------------#
-# Joel:
-# prioritizeCons()
-# Sorts cons array based on if they work during supervisor hours and how many shifts they have
-# Use sort method based off length of worker Schedule Array
-# Those who work outside of supervisor hours (2000 - 200 next day) can be moved to bottom of list
-# Which cons do not work during supervisor hours ?? => 10:00pm - 2:00 am
-
-
-def prioritizecons(lstCons, lstSup):
-    # Conventional hours a supervisor would work in military time. (8:00am - 10:00pm)
-    # Count total amount of hours a cons works in a week
-    # if they have 1 shift per week during supervisor hours
-    # if they don't have at least 1 shift they would go back to the back of the list
-    # If they DO have at least one shift => Are ordered based off how many hours they work a week
-    # The one with the lowest number of hours list[0]
-
-    # Use 24hr military time => 9 == 9:00am | 22 == 10:00pm
-    # Note: There is ALWAYS going to be a supervisor/management during these times.
-    startTime = 9
-    endTime = 22
-
-    # Boolean to check of they have a supervisor during the hours
-    # haveSup = False ???
+# ------------------------------------->
+def priorotizeConsultants(lstCons, lstSup):
 
     # List of all Scheduled consultants
-    scheduledCons = []
+    scheduledConsultants = []
     # List of all Unscheduled consultants
-    unscheduledCons = []
+    unscheduledConsultants = []
 
     # print('The total amount of shifts are: ' + str(shiftCount) + '.')
 
     for obj in lstCons:
+        if lstCons is None:
+            return 'Please check the csv file.'
         # print(obj.location, obj.dayofWeek, obj.start, obj.end) #
         # Checks if the start and end time are within supervisor hours
         if (obj.start >= startTime) and (obj.end <= endTime):
@@ -202,8 +182,8 @@ def prioritizecons(lstCons, lstSup):
             # sepSched = 'Scheduled Consultants: '
             hoursWorked = obj.end - obj.start
             # scheduledCons.append(sepSched)
-            scheduledCons.append(obj.netID)
-            scheduledCons.append(hoursWorked)
+            scheduledConsultants.append(obj.netID)
+            scheduledConsultants.append(hoursWorked)
             # print("The Scheduled consultants are: " + str(scheduledCons))
             for supObj in lstSup:
                 if (supObj.location == obj.location) and (supObj.dayofWeek == obj.dayofWeek):
@@ -212,25 +192,24 @@ def prioritizecons(lstCons, lstSup):
 
         else:
             sep = 'Unscheduled Consultants: '
-            unscheduledCons.append(sep)
+            unscheduledConsultants.append(sep)
             nightHoursWorked = obj.end - obj.start
-            unscheduledCons.append(obj.netID)
-            unscheduledCons.append(nightHoursWorked)
+            unscheduledConsultants.append(obj.netID)
+            unscheduledConsultants.append(nightHoursWorked)
             # print('The Unscheduled consultants are: ' + str(unscheduledCons))
 
     # Combining both scheduled and unscheduled consultants
-    finalList = scheduledCons + unscheduledCons
+    finalList = scheduledConsultants + unscheduledConsultants
     print('The final list of consultants:' + str(finalList))
     return finalList
 
 
-# ----------------------------------------------------------------------#
+# ------------------------------------->
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
-#
 # Go through cons list sequentially. For each cons, go through supervisor list.
 
-# ----------------------------------------------------------------------#
+# ------------------------------------->
 def Assignment():
     supFocusedIndex = 0
     for i in range(0, len(consRoster)):
@@ -240,8 +219,7 @@ def Assignment():
         print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
 
 
-# ----------------------------------------------------------------------#
-
+# ------------------------------------->
 # Edler:
 # ranking()
 # count overlapping hours
@@ -275,4 +253,8 @@ def ranking(consultant):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
-# hello
+
+
+# Main
+if __name__ == "__main__":
+    print('hello')
