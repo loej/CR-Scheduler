@@ -40,7 +40,11 @@ startTime = 9
 endTime = 22
 supRoster = []
 consRoster = []
-
+#if __name__ == '__main__':
+ #   rows, cols = (7, 25)
+  #  x = [[0 for i in range(cols)] for j in range(rows)]
+   # x[0][0] = 1
+    #print(x)
 
 # ------------------------------------->
 # Helper Method.
@@ -81,8 +85,13 @@ def convert24(str1, check):
     # Checking if last two elements of time is AM
     if str1[-2:] == "PM":
         # add 12 to hours and remove PM
+        if str1[:-5] == "11":
+            return 23
+        print(str1[:-5])
+        if str1[:-5] == "12":
+            return 12
         str2 = str(int(str1[:-5]) + 12)
-        if check == 1:  # Check if Start Time, then go to Ceiling
+        if check == 1:  # Check if Sart Time, then go to Ceiling
             x = int(str1[-4:-2])
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
@@ -122,6 +131,7 @@ def populate2D(arr, location, day, start, end):
     if day == "Saturday":
         arr[6][0] = 1
         i = 6
+<<<<<<< HEAD
     for j in range(len(arr[i])):
         if j == start:
             arr[i][j] += 1
@@ -129,6 +139,10 @@ def populate2D(arr, location, day, start, end):
             for k in range(end):
                 arr[i][k] += 1
 
+=======
+    for j in range(start+1, end+2):
+            arr[i][j]=1
+>>>>>>> 8a14f369826c809aacd58ceb9aa10a8102f9ec4b
 
 # ------------------------------------->
 # Hassaan
@@ -175,15 +189,23 @@ with open(".\\Sups.csv") as csv_file2:
                 continue
             if row[0] != prev:  # NetID is the same as last row
                 if prev != "":
-                    supRoster.append(Sups(new.netID, new.schedule))
+                    print(sched)
+                    supRoster.append(Sups(netID, sched))
                     prev = new.netID
-                new = Sups
                 print(row[0])
+<<<<<<< HEAD
                 new.netID = row[0]  # Initialize netID
                 rows, cols = (7, 25)
                 new.schedule = [[0] * cols] * rows
             populate2D(new.schedule, row[1], row[3], row[4], row[5])
             prev = new.netID
+=======
+                netID = row[0]  # Initialize netID
+                rows, cols = (7,25)
+                sched = [[0 for i in range(cols)] for j in range(rows)]
+            populate2D(sched,row[1], row[3], row[4], row[5])
+            prev = netID
+>>>>>>> 8a14f369826c809aacd58ceb9aa10a8102f9ec4b
         line_count += 1
 
 
@@ -306,4 +328,8 @@ def ranking(consultant):
                     if (supRoster[a].Schedule[focusedShift.Day][hour]):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
+<<<<<<< HEAD
     return supIndex;
+=======
+    return supIndex;
+>>>>>>> 8a14f369826c809aacd58ceb9aa10a8102f9ec4b
