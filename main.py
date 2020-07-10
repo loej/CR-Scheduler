@@ -227,45 +227,38 @@ with open(".\\Sups.csv") as csv_file2:
 
 
 # ------------------------------------->
-def priorotizeConsultants(lstCons, lstSup):
 
+def priorotizeConsultants(lstCons):
     # List of all Scheduled consultants
     scheduledConsultants = []
     # List of all Unscheduled consultants
     unscheduledConsultants = []
 
     # print('The total amount of shifts are: ' + str(shiftCount) + '.')
-
-    for obj in lstCons:
-        if lstCons is None:
+    for obj in range(len(lstCons)):
+        iterate = lstCons[obj].schedule
+        objNetid = lstCons[obj].netID
+        if iterate is None:
             return 'Please check the csv file.'
-        # print(obj.location, obj.dayofWeek, obj.start, obj.end) #
-        # Checks if the start and end time are within supervisor hours
-        if (obj.start >= startTime) and (obj.end <= endTime):
-            # Total hours worked:
-            # sepSched = 'Scheduled Consultants: '
-            hoursWorked = obj.end - obj.start
-            # scheduledCons.append(sepSched)
-            scheduledConsultants.append(obj.netID)
-            scheduledConsultants.append(hoursWorked)
-            # print("The Scheduled consultants are: " + str(scheduledCons))
-            for supObj in lstSup:
-                if (supObj.location == obj.location) and (supObj.dayofWeek == obj.dayofWeek):
-                    break
-            print(str(supObj.netID) + ' ' + str(obj.netID) + ' ' + str(obj.dayofWeek))
+        for i in range(len(iterate)):
+            location = iterate[i].location
+            dayofWeek = iterate[i].dayofWeek
+            startingShift = iterate[i].start
+            endShift = iterate[i].end
+            if (location and dayofWeek and startingShift and endShift) is None:
+                return 'Please check the csv file'
+            if (startingShift >= startTime) and (endShift <= endTime):
+                hoursWorked = endShift - startingShift
+                scheduledConsultants.append(objNetid)
+                scheduledConsultants.append(hoursWorked)
+            else:
+                sep = 'Unscheduled Consultants: '
+                unscheduledConsultants.append(sep)
+                nightHoursWorked = endShift - startingShift
+                unscheduledConsultants.append(objNetid)
+                unscheduledConsultants.append(nightHoursWorked)
 
-        else:
-            sep = 'Unscheduled Consultants: '
-            unscheduledConsultants.append(sep)
-            nightHoursWorked = obj.end - obj.start
-            unscheduledConsultants.append(obj.netID)
-            unscheduledConsultants.append(nightHoursWorked)
-            # print('The Unscheduled consultants are: ' + str(unscheduledCons))
-
-    # Combining both scheduled and unscheduled consultants
-    finalList = scheduledConsultants + unscheduledConsultants
-    print('The final list of consultants:' + str(finalList))
-    return finalList
+    return [scheduledConsultants, unscheduledConsultants]
 
 
 # ------------------------------------->
