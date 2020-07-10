@@ -95,13 +95,48 @@ def convert24(str1, check):
 
 
 # ------------------------------------->
+# Populate2D Array for Sups.Schedule
+def populate2D (arr, location, day, start, end):
+    start = convert24(start, 1)
+    end = convert24(end, 0)
+    i = 0
+    if "BEST" in location:
+        return
+    if day == "Sunday":
+        arr[0][0] = 1
+    if day == "Monday":
+        arr[1][0] = 1
+        i = 1
+    if day == "Tuesday":
+        arr[2][0] = 1
+        i = 2
+    if day == "Wednesday":
+        arr[3][0] = 1
+        i = 3
+    if day == "Thursday":
+        arr[4][0] = 1
+        i = 4
+    if day == "Friday":
+        arr[5][0] = 1
+        i = 5
+    if day == "Saturday":
+        arr[6][0]= 1
+        i = 6
+    for j in range(len(arr[i])):
+        if j == start:
+            arr[i][j]+=1
+            k = j
+            for k in range(end):
+                arr[i][k]+=1
+
+# ------------------------------------->
 # Hassaan
 # Reads CSV and creates Array of Workers #
 # def read_CSV() :
-
+#---------------------------------------------READING CONS --------------------------------->
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count = 0
+    line_count=0
     prev = ""
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
@@ -124,7 +159,31 @@ with open(".\\Cons.csv") as csv_file:
         line_count += 1
     for x in consRoster:
         print(x.netID)
-
+#------------------------------------------------------------------------------------->
+#---------------------------------------------READING SUPS --------------------------------->
+with open(".\\Sups.csv") as csv_file2:
+    csv_reader = csv.reader(csv_file2, delimiter=',')
+    line_count=0
+    prev = ""
+    for row in csv_reader:  # Iterate through every row
+        if line_count != 0:  # Make sure not the Top Column
+            print(row[0])
+            if row[0] == "":  # Error check in case netID field is empty
+                line_count += 1
+                # print("hello world")
+                continue
+            if row[0] != prev:  # NetID is the same as last row
+                if prev != "":
+                    supRoster.append(Sups(new.netID, new.schedule))
+                    prev = new.netID
+                new = Sups
+                print(row[0])
+                new.netID = row[0]  # Initialize netID
+                rows, cols = (7,25)
+                new.schedule = [[0]*cols]*rows
+            populate2D(new.schedule,row[1], row[3], row[4], row[5])
+            prev = new.netID
+        line_count += 1
 
 # ------------------------------------->
 # Day of the Week:
@@ -247,7 +306,3 @@ def ranking(consultant):
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
 
-
-# Main
-if __name__ == "__main__":
-    print('hello')
