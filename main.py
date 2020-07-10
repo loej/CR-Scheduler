@@ -96,7 +96,7 @@ def convert24(str1, check):
 
 # ------------------------------------->
 # Populate2D Array for Sups.Schedule
-def populate2D (arr, location, day, start, end):
+def populate2D(arr, location, day, start, end):
     start = convert24(start, 1)
     end = convert24(end, 0)
     i = 0
@@ -120,23 +120,24 @@ def populate2D (arr, location, day, start, end):
         arr[5][0] = 1
         i = 5
     if day == "Saturday":
-        arr[6][0]= 1
+        arr[6][0] = 1
         i = 6
     for j in range(len(arr[i])):
         if j == start:
-            arr[i][j]+=1
+            arr[i][j] += 1
             k = j
             for k in range(end):
-                arr[i][k]+=1
+                arr[i][k] += 1
+
 
 # ------------------------------------->
 # Hassaan
 # Reads CSV and creates Array of Workers #
 # def read_CSV() :
-#---------------------------------------------READING CONS --------------------------------->
+# ---------------------------------------------READING CONS --------------------------------->
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count=0
+    line_count = 0
     prev = ""
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
@@ -159,11 +160,11 @@ with open(".\\Cons.csv") as csv_file:
         line_count += 1
     for x in consRoster:
         print(x.netID)
-#------------------------------------------------------------------------------------->
-#---------------------------------------------READING SUPS --------------------------------->
+# ------------------------------------------------------------------------------------->
+# ---------------------------------------------READING SUPS --------------------------------->
 with open(".\\Sups.csv") as csv_file2:
     csv_reader = csv.reader(csv_file2, delimiter=',')
-    line_count=0
+    line_count = 0
     prev = ""
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
@@ -179,11 +180,12 @@ with open(".\\Sups.csv") as csv_file2:
                 new = Sups
                 print(row[0])
                 new.netID = row[0]  # Initialize netID
-                rows, cols = (7,25)
-                new.schedule = [[0]*cols]*rows
-            populate2D(new.schedule,row[1], row[3], row[4], row[5])
+                rows, cols = (7, 25)
+                new.schedule = [[0] * cols] * rows
+            populate2D(new.schedule, row[1], row[3], row[4], row[5])
             prev = new.netID
         line_count += 1
+
 
 # ------------------------------------->
 # Day of the Week:
@@ -305,4 +307,3 @@ def ranking(consultant):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
-
