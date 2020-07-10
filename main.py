@@ -85,11 +85,6 @@ def convert24(str1, check):
     # Checking if last two elements of time is AM
     if str1[-2:] == "PM":
         # add 12 to hours and remove PM
-        if str1[:-5] == "11":
-            return 23
-        print(str1[:-5])
-        if str1[:-5] == "12":
-            return 12
         str2 = str(int(str1[:-5]) + 12)
         if check == 1:  # Check if Sart Time, then go to Ceiling
             x = int(str1[-4:-2])
@@ -179,15 +174,15 @@ with open(".\\Sups.csv") as csv_file2:
                 continue
             if row[0] != prev:  # NetID is the same as last row
                 if prev != "":
-                    print(sched)
-                    supRoster.append(Sups(netID, sched))
+                    supRoster.append(Sups(new.netID, new.schedule))
                     prev = new.netID
+                new = Sups
                 print(row[0])
-                netID = row[0]  # Initialize netID
+                new.netID = row[0]  # Initialize netID
                 rows, cols = (7,25)
-                sched = [[0 for i in range(cols)] for j in range(rows)]
-            populate2D(sched,row[1], row[3], row[4], row[5])
-            prev = netID
+                new.schedule = [[0]*cols]*rows
+            populate2D(new.schedule,row[1], row[3], row[4], row[5])
+            prev = new.netID
         line_count += 1
 
 # ------------------------------------->
@@ -227,38 +222,45 @@ with open(".\\Sups.csv") as csv_file2:
 
 
 # ------------------------------------->
+def priorotizeConsultants(lstCons, lstSup):
 
-def priorotizeConsultants(lstCons):
     # List of all Scheduled consultants
     scheduledConsultants = []
     # List of all Unscheduled consultants
     unscheduledConsultants = []
 
     # print('The total amount of shifts are: ' + str(shiftCount) + '.')
-    for obj in range(len(lstCons)):
-        iterate = lstCons[obj].schedule
-        objNetid = lstCons[obj].netID
-        if iterate is None:
-            return 'Please check the csv file.'
-        for i in range(len(iterate)):
-            location = iterate[i].location
-            dayofWeek = iterate[i].dayofWeek
-            startingShift = iterate[i].start
-            endShift = iterate[i].end
-            if (location and dayofWeek and startingShift and endShift) is None:
-                return 'Please check the csv file'
-            if (startingShift >= startTime) and (endShift <= endTime):
-                hoursWorked = endShift - startingShift
-                scheduledConsultants.append(objNetid)
-                scheduledConsultants.append(hoursWorked)
-            else:
-                sep = 'Unscheduled Consultants: '
-                unscheduledConsultants.append(sep)
-                nightHoursWorked = endShift - startingShift
-                unscheduledConsultants.append(objNetid)
-                unscheduledConsultants.append(nightHoursWorked)
 
-    return [scheduledConsultants, unscheduledConsultants]
+    for obj in lstCons:
+        if lstCons is None:
+            return 'Please check the csv file.'
+        # print(obj.location, obj.dayofWeek, obj.start, obj.end) #
+        # Checks if the start and end time are within supervisor hours
+        if (obj.start >= startTime) and (obj.end <= endTime):
+            # Total hours worked:
+            # sepSched = 'Scheduled Consultants: '
+            hoursWorked = obj.end - obj.start
+            # scheduledCons.append(sepSched)
+            scheduledConsultants.append(obj.netID)
+            scheduledConsultants.append(hoursWorked)
+            # print("The Scheduled consultants are: " + str(scheduledCons))
+            for supObj in lstSup:
+                if (supObj.location == obj.location) and (supObj.dayofWeek == obj.dayofWeek):
+                    break
+            print(str(supObj.netID) + ' ' + str(obj.netID) + ' ' + str(obj.dayofWeek))
+
+        else:
+            sep = 'Unscheduled Consultants: '
+            unscheduledConsultants.append(sep)
+            nightHoursWorked = obj.end - obj.start
+            unscheduledConsultants.append(obj.netID)
+            unscheduledConsultants.append(nightHoursWorked)
+            # print('The Unscheduled consultants are: ' + str(unscheduledCons))
+
+    # Combining both scheduled and unscheduled consultants
+    finalList = scheduledConsultants + unscheduledConsultants
+    print('The final list of consultants:' + str(finalList))
+    return finalList
 
 
 # ------------------------------------->
@@ -310,3 +312,4 @@ def ranking(consultant):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
+
