@@ -91,7 +91,7 @@ def convert24(str1, check):
         if str1[:-5] == "12":
             return 12
         str2 = str(int(str1[:-5]) + 12)
-        if check == 1:  # Check if Start Time, then go to Ceiling
+        if check == 1:  # Check if Sart Time, then go to Ceiling
             x = int(str1[-4:-2])
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
