@@ -32,7 +32,7 @@ Navigate to the created folder:
   ```
   cd CR-Scheduler
   ```
-List all the documents in the CR-Scheduler Directory:
+List all the documents in the CR-Scheduler directory:
   ```
   ls
   ```
