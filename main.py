@@ -18,8 +18,7 @@ class Sups:
     def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
-        self.assignedCons=[];
-
+        self.assignedCons = [];
 
 
 class Shift:
@@ -43,11 +42,13 @@ startTime = 9
 endTime = 22
 supRoster = []
 consRoster = []
-#if __name__ == '__main__':
- #   rows, cols = (7, 25)
-  #  x = [[0 for i in range(cols)] for j in range(rows)]
-   # x[0][0] = 1
-    #print(x)
+
+
+# if __name__ == '__main__':
+#   rows, cols = (7, 25)
+#  x = [[0 for i in range(cols)] for j in range(rows)]
+# x[0][0] = 1
+# print(x)
 
 # ------------------------------------->
 # Helper Method.
@@ -108,7 +109,7 @@ def convert24(str1, check):
 
 # ------------------------------------->
 # Populate2D Array for Sups.Schedule
-def populate2D (arr, location, day, start, end):
+def populate2D(arr, location, day, start, end):
     start = convert24(start, 1)
     end = convert24(end, 0)
     i = 0
@@ -132,7 +133,7 @@ def populate2D (arr, location, day, start, end):
         arr[5][0] = 1
         i = 5
     if day == "Saturday":
-        arr[6][0]= 1
+        arr[6][0] = 1
         i = 6
     for j in range(start+1, end+2):
             arr[i][j]=1
@@ -168,11 +169,11 @@ with open(".\\Cons.csv") as csv_file:
     consRoster.append(Cons(new.netID, new.schedule))
     for x in consRoster:
         print(x.netID)
-#------------------------------------------------------------------------------------->
-#---------------------------------------------READING SUPS --------------------------------->
+# ------------------------------------------------------------------------------------->
+# ---------------------------------------------READING SUPS --------------------------------->
 with open(".\\Sups.csv") as csv_file2:
     csv_reader = csv.reader(csv_file2, delimiter=',')
-    line_count=0
+    line_count = 0
     prev = ""
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
@@ -253,10 +254,15 @@ def priorotizeConsultants(lstCons):
             endShift = iterate[i].end
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'Please check the csv file'
-            if (startingShift >= startTime) and (endShift <= endTime):
+            elif (startingShift >= startTime) and (endShift <= endTime):
                 hoursWorked = endShift - startingShift
-                scheduledConsultants.append(objNetid)
-                scheduledConsultants.append(hoursWorked)
+                consLibrary = {
+                    "netid": objNetid,
+                    "consClass": hoursWorked
+                }
+                scheduledConsultants.append(Cons(oneConsHours))
+                scheduledConsultants.append(Cons(objNetid))
+                # scheduledConsultants.append(hoursWorked)
             else:
                 sep = 'Unscheduled Consultants: '
                 unscheduledConsultants.append(sep)
@@ -275,8 +281,8 @@ def priorotizeConsultants(lstCons):
 # ------------------------------------->
 def Assignment():
     supFocusedIndex = 0
-    #[schedCons,unschedCons]=priorotizeConsultants(consRoster);
-    schedCons=consRoster
+    # [schedCons,unschedCons]=priorotizeConsultants(consRoster);
+    schedCons = consRoster
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
@@ -300,28 +306,28 @@ def Assignment():
 # return index of highest ranking supervisor
 
 def ranking(consultant):
-    consultantThreshold=math.floor(len(consRoster)/len(supRoster));
-    supCount = len(supRoster);
-    rankingArray = [0] * supCount;
-    siteWeight = [10, 4, 6, 8];
-    tempMax = 0;
-    maxLOL = 0;
-    supIndex = 0;
+    consultantThreshold = math.floor(len(consRoster) / len(supRoster))
+    supCount = len(supRoster)
+    rankingArray = [0] * supCount
+    siteWeight = [10, 4, 6, 8]
+    tempMax = 0
+    maxLOL = 0
+    supIndex = 0
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3;
+        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3
     for i in range(0, len(consultant.schedule)):
-        focusedShift = consultant.schedule[i];
+        focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
             if (1 == supRoster[a].schedule[focusedShift.dayofWeek][0]):
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
-                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location];
-    #supIndex, max = max(rankingArray, key=lambda item: item[1]);
+                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
+    # supIndex, max = max(rankingArray, key=lambda item: item[1]);
     print(rankingArray)
-    supIndex=rankingArray.index(max(rankingArray))
+    supIndex = rankingArray.index(max(rankingArray))
     print(supIndex)
-    return supIndex;
+    return supIndex
 
 if __name__ == '__main__':
 
