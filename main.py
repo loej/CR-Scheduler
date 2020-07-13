@@ -2,6 +2,7 @@
 
 # Parent classes
 import csv
+import math
 
 
 class Cons:
@@ -17,6 +18,8 @@ class Sups:
     def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
+        self.assignedCons=[];
+
 
 
 class Shift:
@@ -292,6 +295,7 @@ def Assignment():
 # return index of highest ranking supervisor
 
 def ranking(consultant):
+    consultantThreshold=math.floor(len(consRoster)/len(supRoster));
     supCount = len(supRoster);
     rankingArray = [0] * supCount;
     siteWeight = [10, 4, 6, 8];
@@ -300,13 +304,17 @@ def ranking(consultant):
     supIndex = 0;
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        rankingArray[i] = rankingArray[i] + (len(rankingArray[i].assignedCons) - consultantThreshold) * 3;
-    for i in range(0, len(consultant.Schedule)):
-        focusedShift = consultant.Schedule[i];
+        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3;
+    for i in range(0, len(consultant.schedule)):
+        focusedShift = consultant.schedule[i];
         for a in range(0, supCount):
-            if (1 == supRoster[a].Schedule[focusedShift.Day][0]):
+            if (1 == supRoster[a].schedule[focusedShift.dayofWeek][0]):
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
-                    if (supRoster[a].Schedule[focusedShift.Day][hour]):
-                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.Location];
+                    if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
+                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location];
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
+
+if __name__ == '__main__':
+    priorotizeConsultants(consRoster);
+    Assignment();
