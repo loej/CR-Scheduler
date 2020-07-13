@@ -266,10 +266,14 @@ def priorotizeConsultants(lstCons):
             endShift = iterate[i].end
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'Please check the csv file'
-            if (startingShift >= startTime) and (endShift <= endTime):
+            elif (startingShift >= startTime) and (endShift <= endTime):
                 hoursWorked = endShift - startingShift
-
-                scheduledConsultants.append(objNetid)
+                consLibrary = {
+                    "netid": objNetid,
+                    "consClass": hoursWorked
+                }
+                scheduledConsultants.append(Cons(oneConsHours))
+                scheduledConsultants.append(Cons(objNetid))
                 # scheduledConsultants.append(hoursWorked)
             else:
                 sep = 'Unscheduled Consultants: '
@@ -289,8 +293,8 @@ def priorotizeConsultants(lstCons):
 # ------------------------------------->
 def Assignment():
     supFocusedIndex = 0
-    #[schedCons,unschedCons]=priorotizeConsultants(consRoster);
-    schedCons=consRoster
+    # [schedCons,unschedCons]=priorotizeConsultants(consRoster);
+    schedCons = consRoster
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
@@ -314,39 +318,30 @@ def Assignment():
 # return index of highest ranking supervisor
 
 def ranking(consultant):
-    consultantThreshold = math.floor(len(consRoster) / len(supRoster));
-    supCount = len(supRoster);
-    rankingArray = [0] * supCount;
-    siteWeight = [10, 4, 6, 8];
-    tempMax = 0;
-    maxLOL = 0;
-    supIndex = 0;
+    consultantThreshold = math.floor(len(consRoster) / len(supRoster))
+    supCount = len(supRoster)
+    rankingArray = [0] * supCount
+    siteWeight = [10, 4, 6, 8]
+    tempMax = 0
+    maxLOL = 0
+    supIndex = 0
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3;
+        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3
     for i in range(0, len(consultant.schedule)):
-        focusedShift = consultant.schedule[i];
+        focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
             if (1 == supRoster[a].schedule[focusedShift.dayofWeek][0]):
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
-                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location];
-    #supIndex, max = max(rankingArray, key=lambda item: item[1]);
+                        rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
+    # supIndex, max = max(rankingArray, key=lambda item: item[1]);
     print(rankingArray)
-    supIndex=rankingArray.index(max(rankingArray))
+    supIndex = rankingArray.index(max(rankingArray))
     print(supIndex)
-    return supIndex;
-
-    return supIndex;
+    return supIndex
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    priorotizeConsultants(consRoster);
-    Assignment();
-=======
-
-    Assignment();
-   # [schedCons, unschedCons] = priorotizeConsultants(consRoster);
-    #print(schedCons)
->>>>>>> 4a3e33368c3c8a05dcfccdb751faa63d39156e0d
+    priorotizeConsultants(consRoster)
+    Assignment()
