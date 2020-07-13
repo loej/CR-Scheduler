@@ -18,8 +18,7 @@ class Sups:
     def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
-        self.assignedCons=[];
-
+        self.assignedCons = [];
 
 
 class Shift:
@@ -269,8 +268,9 @@ def priorotizeConsultants(lstCons):
                 return 'Please check the csv file'
             if (startingShift >= startTime) and (endShift <= endTime):
                 hoursWorked = endShift - startingShift
+
                 scheduledConsultants.append(objNetid)
-                scheduledConsultants.append(hoursWorked)
+                # scheduledConsultants.append(hoursWorked)
             else:
                 sep = 'Unscheduled Consultants: '
                 unscheduledConsultants.append(sep)
@@ -312,7 +312,7 @@ def Assignment():
 # return index of highest ranking supervisor
 
 def ranking(consultant):
-    consultantThreshold=math.floor(len(consRoster)/len(supRoster));
+    consultantThreshold = math.floor(len(consRoster) / len(supRoster));
     supCount = len(supRoster);
     rankingArray = [0] * supCount;
     siteWeight = [10, 4, 6, 8];
@@ -332,10 +332,9 @@ def ranking(consultant):
     supIndex, max = max(rankingArray, key=lambda item: item[1]);
     return supIndex;
 
-<<<<<<< HEAD
     return supIndex;
-=======
+
+
 if __name__ == '__main__':
     priorotizeConsultants(consRoster);
     Assignment();
->>>>>>> 302025adaa350a6a77b51613173d78b95901d17e
