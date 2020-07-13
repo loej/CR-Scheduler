@@ -253,15 +253,20 @@ def priorotizeConsultants(lstCons):
             startingShift = iterate[i].start
             endShift = iterate[i].end
             if (location and dayofWeek and startingShift and endShift) is None:
-                return 'Please check the csv file'
+                return 'Please check the csv file.'
             elif (startingShift >= startTime) and (endShift <= endTime):
                 hoursWorked = endShift - startingShift
                 consLibrary = {
-                    "netid": objNetid,
-                    "consClass": hoursWorked
+                    objNetid: hoursWorked
                 }
-                scheduledConsultants.append(Cons(oneConsHours))
-                scheduledConsultants.append(Cons(objNetid))
+                # Sorted Libray Values
+                sortedTime = sorted(consLibrary.keys(hoursWorked))
+                consIndex = sortedTime.index(hoursWorked)
+                scheduledConsultants.append(Cons(consIndex))
+                print(scheduledConsultants)
+                # x = consLibrary.get(objNetid)
+                # scheduledConsultants.append(Cons())
+                # scheduledConsultants.append(Cons())
                 # scheduledConsultants.append(hoursWorked)
             else:
                 sep = 'Unscheduled Consultants: '
