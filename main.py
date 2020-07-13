@@ -197,7 +197,6 @@ with open(".\\Sups.csv") as csv_file2:
                     supRoster.append(Sups(netID, sched))
                     prev = new.netID
                 print(row[0])
-<<<<<<< HEAD
                 new.netID = row[0]  # Initialize netID
                 rows, cols = (7, 25)
                 new.schedule = [[0] * cols] * rows
@@ -210,18 +209,17 @@ with open(".\\Sups.csv") as csv_file2:
         prev = netID
     line_count += 1
 
+    netID = row[0]  # Initialize netID
+    rows, cols = (7, 25)
+    sched = [[0 for i in range(cols)] for j in range(rows)]
+populate2D(sched, row[1], row[3], row[4], row[5])
+prev = netID
+line_count += 1
+supRoster.append(Sups(netID, sched))
+for a in supRoster:
+    print(a.netID)
 
-=======
-                netID = row[0]  # Initialize netID
-                rows, cols = (7,25)
-                sched = [[0 for i in range(cols)] for j in range(rows)]
-            populate2D(sched,row[1], row[3], row[4], row[5])
-            prev = netID
-        line_count += 1
-    supRoster.append(Sups(netID, sched))
-    for a in supRoster:
-        print(a.netID)
->>>>>>> 1b26c1d6f67801ace56662b93c46902f79d04843
+
 # ------------------------------------->
 # Day of the Week:
 # 0 = Sunday
@@ -354,14 +352,12 @@ def ranking(consultant):
     print(supIndex)
     return supIndex
 
-
-<<<<<<< HEAD
+<< << << < HEAD
 if __name__ == '__main__':
     priorotizeConsultants(consRoster)
     Assignment()
-=======
-    Assignment();
-   # [schedCons, unschedCons] = priorotizeConsultants(consRoster);
-    #print(schedCons)
-    #lll
->>>>>>> 1b26c1d6f67801ace56662b93c46902f79d04843
+== == == =
+Assignment();
+# [schedCons, unschedCons] = priorotizeConsultants(consRoster);
+# print(schedCons)
+# lll
