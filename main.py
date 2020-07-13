@@ -315,7 +315,7 @@ def Assignment():
 
 def ranking(consultant):
     consultantThreshold = math.floor(len(consRoster) / len(supRoster))
-    print("Threshold",consultantThreshold);
+    #print("Threshold",consultantThreshold);
     supCount = len(supRoster)
     rankingArray = [0] * supCount
     siteWeight = [10, 4, 6, 8]
