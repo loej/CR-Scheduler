@@ -321,8 +321,11 @@ def Assignment():
                 break;
 
 #HASSAAN LOOK AT THIS THIS IS WHERE I OUTPUT THE STUFF SO WE CAN RUN EXPORT TO CSV OKAY
-    for i in range(0, len(supRoster)):
-        print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
+    with open('Results.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        for i in range(0, len(supRoster)):
+            print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
+            writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
 
 
 # ------------------------------------->
@@ -385,7 +388,7 @@ def setConflicts():
 
 
 if __name__ == '__main__':
-    setConflicts();
+    #setConflicts();
     Assignment();
 
     # joelplease
