@@ -3,14 +3,16 @@
 # Parent classes
 import csv
 import math
+import operator
 
 
 class Cons:
 
     # Instance attributes
-    def __init__(self, netID, schedule):
+    def __init__(self, netID, schedule, totalHours):
         self.netID = netID
         self.schedule = schedule
+        self.totalHours = totalHours
 
 
 class Sups:
@@ -19,7 +21,7 @@ class Sups:
         self.netID = netID
         self.schedule = schedule
         self.assignedCons = [];
-        self.noGoodCons=[];
+        self.noGoodCons = [];
 
 
 class Shift:
@@ -92,7 +94,7 @@ def convert24(str1, check):
         # add 12 to hours and remove PM
         if str1[:-5] == "11":
             return 23
-        print(str1[:-5])
+        # print(str1[:-5])
         if str1[:-5] == "12":
             return 12
         str2 = str(int(str1[:-5]) + 12)
@@ -136,40 +138,44 @@ def populate2D(arr, location, day, start, end):
     if day == "Saturday":
         arr[6][0] = 1
         i = 6
-    for j in range(start+1, end+2):
-            arr[i][j]= 1
+    for j in range(start + 1, end + 2):
+        arr[i][j] = 1
+
 
 # ------------------------------------->
 # Hassaan
 # Reads CSV and creates Array of Workers #
 # def read_CSV() :
-#---------------------------------------------READING CONS --------------------------------->
+# ---------------------------------------------READING CONS --------------------------------->
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count=0
+    line_count = 0
     prev = ""
+    hoursCount = 0;
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
-            print(row[0])
+            # print(row[0])
             if row[0] == "":  # Error check in case netID field is empty
                 line_count += 1
                 # print("hello world")
                 continue
             if row[0] != prev:  # NetID is the same as last row
                 if prev != "":
-                    consRoster.append(Cons(new.netID, new.schedule))
+                    consRoster.append(Cons(new.netID, new.schedule, hoursCount))
                     prev = new.netID
                 new = Cons
-                print(row[0])
+                #   print(row[0])
                 new.netID = row[0]  # Initialize netID
                 new.schedule = []
             [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
             new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
+            hoursCount += temp4 - temp3;
             prev = new.netID
         line_count += 1
-    consRoster.append(Cons(new.netID, new.schedule))
-    for x in consRoster:
-        print(x.netID)
+    consRoster.append(Cons(new.netID, new.schedule, hoursCount))
+    hoursCount = 0;
+# for x in consRoster:
+# print(x.netID)
 # ------------------------------------------------------------------------------------->
 # ---------------------------------------------READING SUPS --------------------------------->
 with open(".\\Sups.csv") as csv_file2:
@@ -178,26 +184,30 @@ with open(".\\Sups.csv") as csv_file2:
     prev = ""
     for row in csv_reader:  # Iterate through every row
         if line_count != 0:  # Make sure not the Top Column
-            print(row[0])
+            # print(row[0])
             if row[0] == "":  # Error check in case netID field is empty
                 line_count += 1
                 # print("hello world")
                 continue
             if row[0] != prev:  # NetID is the same as last row
                 if prev != "":
-                    print(sched)
+                    #  print(sched)
                     supRoster.append(Sups(netID, sched))
                     prev = new.netID
-                print(row[0])
+                #   print(row[0])
                 netID = row[0]  # Initialize netID
-                rows, cols = (7,25)
+                rows, cols = (7, 25)
                 sched = [[0 for i in range(cols)] for j in range(rows)]
-            populate2D(sched,row[1], row[3], row[4], row[5])
+            populate2D(sched, row[1], row[3], row[4], row[5])
             prev = netID
         line_count += 1
     supRoster.append(Sups(netID, sched))
-    for a in supRoster:
-        print(a.netID)
+
+
+# for a in supRoster:
+# print(a.netID)
+
+
 # ------------------------------------->
 # Day of the Week:
 # 0 = Sunday
@@ -241,7 +251,8 @@ def priorotizeConsultants(lstCons):
     scheduledConsultants = []
     # List of all Unscheduled consultants
     unscheduledConsultants = []
-
+    workingDuringSup = False;
+    consDictionary = {};
     # print('The total amount of shifts are: ' + str(shiftCount) + '.')
     # x = [Cons('jfm203',[Shift(0,1,2,3)])]
     for obj in range(len(lstCons)):
@@ -258,39 +269,33 @@ def priorotizeConsultants(lstCons):
                 return 'Please check the csv file.'
             elif (startingShift >= startTime) and (endShift <= endTime):
                 # Calculated Hours Worked
-                hoursWorked = endShift - startingShift
-                consLibrary = {
-                    objNetid: hoursWorked
-                }
-                # Sorted Libray Values
-                # Sorting through the dictionary
-                # jfm203 10 jfm203 11 winnie
-                # Total hours worked 
-                totHoursWorked = 0
-                for x in range(0, len(lstCons)):
-                    if (lstCons[i].netID == objNetid):
-                        # All added hours compounded.
-                        totHoursWorked += hoursWorked
-                        newString = objNetid
-                    else:
-                        scheduledConsultants.append(newString)
-                        scheduledConsultants.append(totHoursWorked)
-                sortedTime = sorted(consLibrary.values())
-                consIndex = sortedTime.index(hoursWorked)
-                scheduledConsultants.append(Cons(consRoster[consIndex].netID,consRoster[consIndex].schedule))
-                # x = consLibrary.get(objNetid)
-                # scheduledConsultants.append(Cons())
-                # scheduledConsultants.append(Cons())
-                # scheduledConsultants.append(hoursWorked)
+                workingDuringSup = True;
+        if (not (workingDuringSup)):
+            # print("cons bad")
+            unscheduledConsultants.append(Cons(lstCons[obj].netID, lstCons[obj].schedule, lstCons[obj].totalHours))
+        else:
+            consDictionary[objNetid] = lstCons[obj].totalHours;
+            workingDuringSup = False;
+
+    sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)));
+    for cons in sortedCons.keys():
+        for i in range(len(lstCons)):
+            if (cons == lstCons[i].netID):
+                scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours));
+                break;
+    return [scheduledConsultants, unscheduledConsultants]
+
+
+"""
             else:
+                print("cons bad")
                 for i in range(0,len(lstCons)):
                     if(lstCons[i].netID==objNetid):
                         unscheduledConsultants.append(lstCons[i]);
                         break;
                     else:
                         print("ERROR")
-
-    return [scheduledConsultants, unscheduledConsultants]
+"""
 
 
 # ------------------------------------->
@@ -300,12 +305,22 @@ def priorotizeConsultants(lstCons):
 
 # ------------------------------------->
 def Assignment():
-    supFocusedIndex = 0
-    # [schedCons,unschedCons]=priorotizeConsultants(consRoster);
-    schedCons = consRoster
+    [schedCons, unschedCons] = priorotizeConsultants(consRoster);
+    supD = {};
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
+    for cons in unschedCons:
+        for sup in supRoster:
+            supD[sup.netID] = len(sup.assignedCons);
+        sortedSupD = dict(sorted(supD.items(), key=operator.itemgetter(1)));
+        for i in range(len(supRoster)):
+            keyList = list(sortedSupD.keys())
+            if (keyList[0] == supRoster[i].netID):
+                supRoster[i].assignedCons.append(cons.netID);
+                break;
+
+
     for i in range(0, len(supRoster)):
         print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
 
@@ -327,7 +342,7 @@ def Assignment():
 
 def ranking(consultant):
     consultantThreshold = math.floor(len(consRoster) / len(supRoster))
-    #print("Threshold",consultantThreshold);
+    # print("Threshold",consultantThreshold);
     supCount = len(supRoster)
     rankingArray = [0] * supCount
     siteWeight = [10, 4, 6, 8]
@@ -336,11 +351,11 @@ def ranking(consultant):
     supIndex = 0
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        if(consultant.netID in supRoster[i].noGoodCons):
-            rankingArray[i]=-999999;
+        if (consultant.netID in supRoster[i].noGoodCons):
+            rankingArray[i] = -999999;
         else:
-            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons))* 20
-        print(supRoster[i].netID,(consultantThreshold - len(supRoster[i].assignedCons))* 20)
+            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 20
+       # print(supRoster[i].netID, (consultantThreshold - len(supRoster[i].assignedCons)) * 20)
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
@@ -349,28 +364,28 @@ def ranking(consultant):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
     # supIndex, max = max(rankingArray, key=lambda item: item[1]);
-    print(consultant.netID)
-    print(rankingArray)
+    # print(consultant.netID)
+    # print(rankingArray)
     supIndex = rankingArray.index(max(rankingArray))
-    print(supRoster[supIndex].netID)
-    print("")
+    # print(supRoster[supIndex].netID)
+    # print("")
     return supIndex
 
+
 def setConflicts():
-    temp="1";
-    for i in range(0,len(supRoster)):
-        while(temp!="0"):
-            print("\nConflicting Consultants for ", supRoster[i].netID, ": ",supRoster[i].noGoodCons);
-            temp=input("Input NetID of conflicting consultant with "+supRoster[i].netID+"\nif there are no further conflicts,enter 0\n");
-            if(temp!="0"):
+    temp = "1";
+    for i in range(0, len(supRoster)):
+        while (temp != "0"):
+            print("\nConflicting Consultants for ", supRoster[i].netID, ": ", supRoster[i].noGoodCons);
+            temp = input("Input NetID of conflicting consultant with " + supRoster[
+                i].netID + "\nif there are no further conflicts,enter 0\n");
+            if (temp != "0"):
                 supRoster[i].noGoodCons.append(temp);
-        temp="1";
+        temp = "1";
 
 
 if __name__ == '__main__':
     setConflicts();
     Assignment();
-    #Assignment();
-    #[schedCons, unschedCons] = priorotizeConsultants(consRoster);
-    #print(schedCons)
-    #joelplease
+
+    # joelplease
