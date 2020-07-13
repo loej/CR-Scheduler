@@ -262,20 +262,18 @@ def priorotizeConsultants(lstCons):
                 # Sorted Libray Values
                 sortedTime = sorted(consLibrary.values())
                 consIndex = sortedTime.index(hoursWorked)
-                scheduledConsultants.append(Cons(consRoster[consIndex].netID,consRoster[consIndex].schedule))
-                for i in scheduledConsultants:
-                  print(i.netID)
+                scheduledConsultants.append(Cons(consIndex))
+                print(scheduledConsultants)
                 # x = consLibrary.get(objNetid)
                 # scheduledConsultants.append(Cons())
                 # scheduledConsultants.append(Cons())
                 # scheduledConsultants.append(hoursWorked)
             else:
-                for i in range(0,len(consRoster)):
-                    if(consRoster[i].netID==objNetid):
-                        unscheduledConsultants.append(consRoster[i]);
-                        break;
-                    else:
-                        print("ERROR")
+                sep = 'Unscheduled Consultants: '
+                unscheduledConsultants.append(sep)
+                nightHoursWorked = endShift - startingShift
+                unscheduledConsultants.append(objNetid)
+                unscheduledConsultants.append(nightHoursWorked)
 
     return [scheduledConsultants, unscheduledConsultants]
 
@@ -314,7 +312,6 @@ def Assignment():
 
 def ranking(consultant):
     consultantThreshold = math.floor(len(consRoster) / len(supRoster))
-    print("Threshold",consultantThreshold);
     supCount = len(supRoster)
     rankingArray = [0] * supCount
     siteWeight = [10, 4, 6, 8]
@@ -323,8 +320,7 @@ def ranking(consultant):
     supIndex = 0
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons))* 20
-        print(supRoster[i].netID,(consultantThreshold - len(supRoster[i].assignedCons))* 20)
+        rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 3
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
@@ -333,16 +329,14 @@ def ranking(consultant):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
     # supIndex, max = max(rankingArray, key=lambda item: item[1]);
-    print(consultant.netID)
     print(rankingArray)
     supIndex = rankingArray.index(max(rankingArray))
-    print(supRoster[supIndex].netID)
-    print("")
+    print(supIndex)
     return supIndex
 
 if __name__ == '__main__':
 
     Assignment();
-    [schedCons, unschedCons] = priorotizeConsultants(consRoster);
-    print(schedCons)
-    #joelplease
+   # [schedCons, unschedCons] = priorotizeConsultants(consRoster);
+    #print(schedCons)
+    #testtesttesttest
