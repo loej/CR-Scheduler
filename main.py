@@ -136,7 +136,7 @@ def populate2D(arr, location, day, start, end):
         arr[6][0] = 1
         i = 6
     for j in range(start+1, end+2):
-            arr[i][j]=1
+            arr[i][j]= 1
 
 # ------------------------------------->
 # Hassaan
