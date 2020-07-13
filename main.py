@@ -319,7 +319,8 @@ def Assignment():
             if (keyList[0] == supRoster[i].netID):
                 supRoster[i].assignedCons.append(cons.netID);
                 break;
-
+    for sup in supRoster:
+        sup.assignedCons.sort();
 #HASSAAN LOOK AT THIS THIS IS WHERE I OUTPUT THE STUFF SO WE CAN RUN EXPORT TO CSV OKAY
     with open('Results.csv', 'w', newline='') as file:
         writer = csv.writer(file)
@@ -388,7 +389,7 @@ def setConflicts():
 
 
 if __name__ == '__main__':
-    #setConflicts();
+    setConflicts();
     Assignment();
 
     # joelplease
