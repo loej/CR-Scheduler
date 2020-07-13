@@ -289,9 +289,11 @@ def priorotizeConsultants(lstCons):
 # ------------------------------------->
 def Assignment():
     supFocusedIndex = 0
-    for i in range(0, len(consRoster)):
-        supFocusedIndex = ranking(consRoster[i])
-        supRoster[supFocusedIndex].assignedCons.append(consRoster[i].netID)
+    #[schedCons,unschedCons]=priorotizeConsultants(consRoster);
+    schedCons=consRoster
+    for i in range(0, len(schedCons)):
+        supFocusedIndex = ranking(schedCons[i])
+        supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
     for i in range(0, len(supRoster)):
         print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
 
@@ -317,7 +319,7 @@ def ranking(consultant):
     rankingArray = [0] * supCount;
     siteWeight = [10, 4, 6, 8];
     tempMax = 0;
-    max = 0;
+    maxLOL = 0;
     supIndex = 0;
     # initalvalues for rankingArray
     for i in range(0, supCount):
@@ -329,12 +331,22 @@ def ranking(consultant):
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location];
-    supIndex, max = max(rankingArray, key=lambda item: item[1]);
+    #supIndex, max = max(rankingArray, key=lambda item: item[1]);
+    print(rankingArray)
+    supIndex=rankingArray.index(max(rankingArray))
+    print(supIndex)
     return supIndex;
 
     return supIndex;
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     priorotizeConsultants(consRoster);
     Assignment();
+=======
+
+    Assignment();
+   # [schedCons, unschedCons] = priorotizeConsultants(consRoster);
+    #print(schedCons)
+>>>>>>> 4a3e33368c3c8a05dcfccdb751faa63d39156e0d
