@@ -243,6 +243,7 @@ def priorotizeConsultants(lstCons):
     unscheduledConsultants = []
 
     # print('The total amount of shifts are: ' + str(shiftCount) + '.')
+    # x = [Cons('jfm203',[Shift(0,1,2,3)])]
     for obj in range(len(lstCons)):
         iterate = lstCons[obj].schedule
         objNetid = lstCons[obj].netID
@@ -256,24 +257,35 @@ def priorotizeConsultants(lstCons):
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'Please check the csv file.'
             elif (startingShift >= startTime) and (endShift <= endTime):
+                # Calculated Hours Worked
                 hoursWorked = endShift - startingShift
                 consLibrary = {
                     objNetid: hoursWorked
                 }
                 # Sorted Libray Values
+                # Sorting through the dictionary
+                # jfm203 10 jfm203 11 winnie
+                # Total hours worked 
+                totHoursWorked = 0
+                for x in range(0, len(lstCons)):
+                    if (lstCons[i].netID == objNetid):
+                        # All added hours compounded.
+                        totHoursWorked += hoursWorked
+                        newString = objNetid
+                    else:
+                        scheduledConsultants.append(newString)
+                        scheduledConsultants.append(totHoursWorked)
                 sortedTime = sorted(consLibrary.values())
                 consIndex = sortedTime.index(hoursWorked)
                 scheduledConsultants.append(Cons(consRoster[consIndex].netID,consRoster[consIndex].schedule))
-                for i in scheduledConsultants:
-                  print(i.netID)
                 # x = consLibrary.get(objNetid)
                 # scheduledConsultants.append(Cons())
                 # scheduledConsultants.append(Cons())
                 # scheduledConsultants.append(hoursWorked)
             else:
-                for i in range(0,len(consRoster)):
-                    if(consRoster[i].netID==objNetid):
-                        unscheduledConsultants.append(consRoster[i]);
+                for i in range(0,len(lstCons)):
+                    if(lstCons[i].netID==objNetid):
+                        unscheduledConsultants.append(lstCons[i]);
                         break;
                     else:
                         print("ERROR")
