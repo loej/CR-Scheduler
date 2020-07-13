@@ -320,7 +320,7 @@ def Assignment():
                 supRoster[i].assignedCons.append(cons.netID);
                 break;
 
-#HASSAAN LOOK AT THIS THIS IS WHERE I OUTPUT THE STUFF SO WE CAN RUN EXPORT TO CSV
+#HASSAAN LOOK AT THIS THIS IS WHERE I OUTPUT THE STUFF SO WE CAN RUN EXPORT TO CSV OKAY
     for i in range(0, len(supRoster)):
         print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
 
