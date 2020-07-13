@@ -165,6 +165,7 @@ with open(".\\Cons.csv") as csv_file:
             new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
             prev = new.netID
         line_count += 1
+    consRoster.append(Cons(new.netID, new.schedule))
     for x in consRoster:
         print(x.netID)
 #------------------------------------------------------------------------------------->
@@ -192,7 +193,9 @@ with open(".\\Sups.csv") as csv_file2:
             populate2D(sched,row[1], row[3], row[4], row[5])
             prev = netID
         line_count += 1
-
+    supRoster.append(Sups(netID, sched))
+    for a in supRoster:
+        print(a.netID)
 # ------------------------------------->
 # Day of the Week:
 # 0 = Sunday
@@ -317,4 +320,4 @@ def ranking(consultant):
 
 if __name__ == '__main__':
     priorotizeConsultants(consRoster);
-    Assignment();
+    #Assignment();
