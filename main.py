@@ -318,11 +318,10 @@ def setConflicts():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for r in csv_reader:  # Iterate through every row
-                b=1
                 new = search(r[0], supRoster)
                 if (new == None):
                     raise TypeError("Supervisor does not exist, retype it")
-                for b in r:
+                for b in range(1, len(r)):
                     new.noGoodCons.append(r[b])
                     print("Success")
                 line_count+=1
