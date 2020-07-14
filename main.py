@@ -311,11 +311,12 @@ def setConflicts():
         for r in csv_reader:  # Iterate through every row
                 new = search(r[0], supRoster)
                 if (new == None):
-                    raise TypeError("Supervisor does not exist, retype it")
-                    input("\nPress ENTER to exit")
-                for b in range(1, len(r)):
-                    new.noGoodCons.append(r[b])
-                    #print("Success")
+                    print("Supervisor ",r[0]," does not exist")
+                    input("Press ENTER to continue\n")
+                else:
+                    for b in range(1, len(r)):
+                        new.noGoodCons.append(r[b])
+                        #print("Success")
                 line_count+=1
 
 if __name__ == '__main__':
