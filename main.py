@@ -305,15 +305,6 @@ def ranking(consultant):
 
 
 def setConflicts():
-    """temp = "1";
-    for i in range(0, len(supRoster)):
-        while (temp != "0"):
-            print("\nConflicting Consultants for ", supRoster[i].netID, ": ", supRoster[i].noGoodCons);
-            temp = input("Input NetID of conflicting consultant with " + supRoster[
-                i].netID + "\nif there are no further conflicts,enter 0\n");
-            if (temp != "0"):
-                supRoster[i].noGoodCons.append(temp);
-        temp = "1";"""
     with open(".\\Conflicts.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
@@ -329,5 +320,6 @@ def setConflicts():
 if __name__ == '__main__':
     setConflicts();
     Assignment();
+    input("Press ENTER to exit")
 
 
