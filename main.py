@@ -1,8 +1,9 @@
 # OIT CR Scheduler
-
-# Parent classes
+# Documentation at README.md: https://github.com/loej/CR-Scheduler/blob/master/README.md
+# Imports
 import csv
 import math
+# More information: https://docs.python.org/3/library/operator.html
 import operator
 
 
@@ -47,14 +48,7 @@ supRoster = []
 consRoster = []
 
 
-# if __name__ == '__main__':
-#   rows, cols = (7, 25)
-#  x = [[0 for i in range(cols)] for j in range(rows)]
-# x[0][0] = 1
-# print(x)
-
-# ------------------------------------->
-# Helper Method.
+# Creates shift based off of location, day of the week, and start and end time of shifts.
 def create_Shift(location, dayofWeek, start, end):
     s = Shift
     # Assigning Location
@@ -86,7 +80,6 @@ def create_Shift(location, dayofWeek, start, end):
     return [s.location, s.dayofWeek, s.start, s.end]
 
 
-# ------------------------------------->
 # Converting 12 Hour to 24 Hour Format
 def convert24(str1, check):
     # Checking if last two elements of time is AM
@@ -98,19 +91,21 @@ def convert24(str1, check):
         if str1[:-5] == "12":
             return 12
         str2 = str(int(str1[:-5]) + 12)
-        if check == 1:  # Check if Sart Time, then go to Ceiling
+        # Check if Sart Time, then go to Ceiling
+        if check == 1:
             x = int(str1[-4:-2])
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
         return int(str2)
 
-    if check == 1:  # Check if Start Time, then go to Ceiling
+    # Check if Start Time, then go to Ceiling
+    if check == 1:
         if int(str1[-4:-2]) > 0:
             return int(str1[:-5]) + 1
     return int(str1[:-5])
 
 
-# ------------------------------------->
+
 # Populate2D Array for Sups.Schedule
 def populate2D(arr, location, day, start, end):
     start = convert24(start, 1)
@@ -142,11 +137,7 @@ def populate2D(arr, location, day, start, end):
         arr[i][j] = 1
 
 
-# ------------------------------------->
-# Hassaan
-# Reads CSV and creates Array of Workers #
-# def read_CSV() :
-# ---------------------------------------------READING CONS --------------------------------->
+# Reads the cons.csv file
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
@@ -174,10 +165,8 @@ with open(".\\Cons.csv") as csv_file:
         line_count += 1
     consRoster.append(Cons(new.netID, new.schedule, hoursCount))
     hoursCount = 0;
-# for x in consRoster:
-# print(x.netID)
-# ------------------------------------------------------------------------------------->
-# ---------------------------------------------READING SUPS --------------------------------->
+
+# Reads sups.csv file
 with open(".\\Sups.csv") as csv_file2:
     csv_reader = csv.reader(csv_file2, delimiter=',')
     line_count = 0
@@ -203,110 +192,60 @@ with open(".\\Sups.csv") as csv_file2:
         line_count += 1
     supRoster.append(Sups(netID, sched))
 
-
-# for a in supRoster:
-# print(a.netID)
-
-
-# ------------------------------------->
-# Day of the Week:
-# 0 = Sunday
-# 1 =Monday
-# 2 = Tuesday
-# 3 = Wednesday
-# 4= Thursday
-# 5 = Friday
-# 6 = Saturday
-#
-# Schedule:
-# 0 = ARC
-# 1 = BEST
-# 2 = Kessler
-# 3 = LSM
-# Start/End:
-# 4 digit 24 hour integer
-# (0-23)
-# i.e. 1:30PM = 1330
-
-# ------------------------------------->
-# Worker and Shift
-# WORKER:
-# + NetID (String)
-# + Schedule (Array of Shifts)
-# + Supervisor (bool)
-# + addShift(shift): type
-
-# SHIFT:
-# + Location (Integer)
-# + Day of the Week (Int)
-# + Start (Integer)
-# + End (Integer)
-# + method(type): type
-
-
-# ------------------------------------->
-
+# Prioritizes consultants using consResult list.
 def priorotizeConsultants(lstCons):
     # List of all Scheduled consultants
     scheduledConsultants = []
     # List of all Unscheduled consultants
     unscheduledConsultants = []
+    # Boolean value that is set to show if a supervisor works during valid hours.
     workingDuringSup = False;
+    # Empty dictionary to be populated below.
     consDictionary = {};
-    # print('The total amount of shifts are: ' + str(shiftCount) + '.')
-    # x = [Cons('jfm203',[Shift(0,1,2,3)])]
+    # This for loop iterates through lstCons which in this case it's the @consRoster list
     for obj in range(len(lstCons)):
+        # Variable that holds the schedule from the Cons() class
         iterate = lstCons[obj].schedule
+        # Variable that holds the netID from the Cons() class
         objNetid = lstCons[obj].netID
+        # Checks for errors if the list is empty.
         if iterate is None:
-            return 'Please check the csv file.'
+            return 'ERROR: Please check the csv file.'
         for i in range(len(iterate)):
+            # Points to the list inside consRoster. This is part of the Shift() class.
+            # This section points to the location, day of the week, and start and end time.
             location = iterate[i].location
             dayofWeek = iterate[i].dayofWeek
             startingShift = iterate[i].start
             endShift = iterate[i].end
+            # Checks for errors if the list is empty.
             if (location and dayofWeek and startingShift and endShift) is None:
-                return 'Please check the csv file.'
+                return 'ERROR: Please check the csv file.'
+             # Checks for the threshold if a consultant is between working Supervisor hours.
             elif (startingShift >= startTime) or (endShift <= endTime):
-                # Calculated Hours Worked
                 workingDuringSup = True;
+        # Appends unscheduled Consultants netID, schedule, and total hours.
         if (not (workingDuringSup)):
-            # print("cons bad")
             unscheduledConsultants.append(Cons(lstCons[obj].netID, lstCons[obj].schedule, lstCons[obj].totalHours))
         else:
+        # Populates the empty dictionary with the netID and total hours.
             consDictionary[objNetid] = lstCons[obj].totalHours;
             workingDuringSup = False;
-
+    # Sorts the values inside the dictionary.
     sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)));
+    # This for loop appends the keys from the dictionary into the scheduled consultants.
     for cons in sortedCons.keys():
         for i in range(len(lstCons)):
             if (cons == lstCons[i].netID):
                 scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours));
                 break;
+    # returns both lists inside a list.
     return [scheduledConsultants, unscheduledConsultants]
 
-
-"""
-            else:
-                print("cons bad")
-                for i in range(0,len(lstCons)):
-                    if(lstCons[i].netID==objNetid):
-                        unscheduledConsultants.append(lstCons[i]);
-                        break;
-                    else:
-                        print("ERROR")
-"""
-
-
-# ------------------------------------->
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 # Go through cons list sequentially. For each cons, go through supervisor list.
-
-# ------------------------------------->
 def Assignment():
-    #lol cmon emo66
-    #have to work on aesthetic
     [schedCons, unschedCons] = priorotizeConsultants(consRoster);
     supD = {};
     for i in range(0, len(schedCons)):
@@ -323,28 +262,13 @@ def Assignment():
                 break;
     for sup in supRoster:
         sup.assignedCons.sort();
-#HASSAAN LOOK AT THIS THIS IS WHERE I OUTPUT THE STUFF SO WE CAN RUN EXPORT TO CSV OKAY
+    # Outputs the results in a csv file.
     with open('Results.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         for i in range(0, len(supRoster)):
             print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
             writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
 
-
-# ------------------------------------->
-# Edler:
-# ranking()
-# count overlapping hours
-# between all supervisors and cons
-#
-# overlapping ARC? +10
-# overlapping LSM? +8
-# overlapping RBHS + 6
-# overlapping BEST? +4
-#
-# difference in number of consultants assigned to supervisor and consultant threshold (x3)
-#
-# return index of highest ranking supervisor
 
 def ranking(consultant):
     consultantThreshold = math.floor(len(consRoster) / len(supRoster))
@@ -394,4 +318,4 @@ if __name__ == '__main__':
     setConflicts();
     Assignment();
 
-    # joelplease
+
