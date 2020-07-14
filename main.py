@@ -192,7 +192,7 @@ with open(".\\Sups.csv") as csv_file2:
         line_count += 1
     supRoster.append(Sups(netID, sched))
 
-# Prioritizes consultants using consResult list.
+# Prioritizes consultants using consRoster list.
 def priorotizeConsultants(lstCons):
     # List of all Scheduled consultants
     scheduledConsultants = []
@@ -285,7 +285,6 @@ def ranking(consultant):
             rankingArray[i] = -999999;
         else:
             rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 20
-       # print(supRoster[i].netID, (consultantThreshold - len(supRoster[i].assignedCons)) * 20)
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
@@ -293,12 +292,7 @@ def ranking(consultant):
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
                     if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
-    # supIndex, max = max(rankingArray, key=lambda item: item[1]);
-    # print(consultant.netID)
-    # print(rankingArray)
     supIndex = rankingArray.index(max(rankingArray))
-    # print(supRoster[supIndex].netID)
-    # print("")
     return supIndex
 
 
