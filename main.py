@@ -323,7 +323,7 @@ def setConflicts():
                     raise TypeError("Supervisor does not exist, retype it")
                 for b in range(1, len(r)):
                     new.noGoodCons.append(r[b])
-                    print("Success")
+                    #print("Success")
                 line_count+=1
 
 if __name__ == '__main__':
