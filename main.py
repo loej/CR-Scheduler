@@ -267,7 +267,7 @@ def priorotizeConsultants(lstCons):
             endShift = iterate[i].end
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'Please check the csv file.'
-            elif (startingShift >= startTime) and (endShift <= endTime):
+            elif (startingShift >= startTime) or (endShift <= endTime):
                 # Calculated Hours Worked
                 workingDuringSup = True;
         if (not (workingDuringSup)):
@@ -305,6 +305,8 @@ def priorotizeConsultants(lstCons):
 
 # ------------------------------------->
 def Assignment():
+    #lol cmon emo66
+    #have to work on aesthetic
     [schedCons, unschedCons] = priorotizeConsultants(consRoster);
     supD = {};
     for i in range(0, len(schedCons)):
