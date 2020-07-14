@@ -135,9 +135,17 @@ def populate2D(arr, location, day, start, end):
         i = 6
     for j in range(start + 1, end + 2):
         arr[i][j] = 1
-
-
-# Reads the cons.csv file
+#
+def search(target, roster):
+    for i in range(0, len(roster)):
+        if(target == roster[i].netID):
+            return roster[i]
+    return None
+# ------------------------------------->
+# Hassaan
+# Reads CSV and creates Array of Workers #
+# def read_CSV() :
+# ---------------------------------------------READING CONS --------------------------------->
 with open(".\\Cons.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
@@ -297,7 +305,7 @@ def ranking(consultant):
 
 
 def setConflicts():
-    temp = "1";
+    """temp = "1";
     for i in range(0, len(supRoster)):
         while (temp != "0"):
             print("\nConflicting Consultants for ", supRoster[i].netID, ": ", supRoster[i].noGoodCons);
@@ -305,11 +313,22 @@ def setConflicts():
                 i].netID + "\nif there are no further conflicts,enter 0\n");
             if (temp != "0"):
                 supRoster[i].noGoodCons.append(temp);
-        temp = "1";
-
+        temp = "1";"""
+    with open(".\\Conflicts.csv") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for r in csv_reader:  # Iterate through every row
+                b=1
+                new = search(r[0], supRoster)
+                if (new == None):
+                    raise TypeError("Supervisor does not exist, retype it")
+                for b in r:
+                    new.noGoodCons.append(r[b])
+                    print("Success")
+                line_count+=1
 
 if __name__ == '__main__':
     setConflicts();
     Assignment();
-#Hello
+
 
