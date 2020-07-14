@@ -312,6 +312,7 @@ def setConflicts():
                 new = search(r[0], supRoster)
                 if (new == None):
                     raise TypeError("Supervisor does not exist, retype it")
+                    input("\nPress ENTER to exit")
                 for b in range(1, len(r)):
                     new.noGoodCons.append(r[b])
                     #print("Success")
@@ -320,6 +321,6 @@ def setConflicts():
 if __name__ == '__main__':
     setConflicts();
     Assignment();
-    input("Press ENTER to exit")
+    input("\nPress ENTER to exit")
 
 
