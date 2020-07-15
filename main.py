@@ -325,10 +325,13 @@ def setConflicts():
                         #print("Success")
                 line_count+=1
 def emohuehue():
-    with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
-        response=temp.content;
-    htmlResponse=BeautifulSoup(response,'html.parser');
-    print(htmlResponse.pre.string);
+    try:
+        with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
+            response=temp.content;
+        htmlResponse=BeautifulSoup(response,'html.parser');
+        print(htmlResponse.pre.string);
+    except:
+        return;
 
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
