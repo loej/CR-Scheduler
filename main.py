@@ -324,6 +324,11 @@ def setConflicts():
                         new.noGoodCons.append(r[b])
                         #print("Success")
                 line_count+=1
+def emohuehue():
+    with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
+        response=temp.content;
+    htmlResponse=BeautifulSoup(response,'html.parser');
+    print(htmlResponse.pre.string);
 
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
@@ -340,11 +345,9 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row")
-    input("\nPress ENTER to continue\n");
-
-
-
-
+    initalInput=input("\nPress ENTER to continue\n");
+    if (initalInput=="emo66"):
+        emohuehue();
     try:
         readCons();
     except FileNotFoundError:
