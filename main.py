@@ -356,11 +356,12 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row")
-    initalInput=input("\nPress ENTER to continue\n");
-    if (initalInput=="emo66"):
-        emohue();
-    if (initalInput.replace(" ","") in "TheEntireBeeMovieScript"):
-        emohuehue();
+    initialInput=input("\nPress ENTER to continue\n");
+    if(initialInput!=""):
+        if (initialInput.replace(" ","") in "TheEntireBeeMovieScript"):
+            emohuehue();
+        if (initialInput == "emo66"):
+            emohue();
     try:
         readCons();
     except FileNotFoundError:
