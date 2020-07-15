@@ -377,7 +377,7 @@ if __name__ == '__main__':
         input("Press ENTER to exit");
         sys.exit("ERROR");
     try:
-        Assignment();
+        Assignment()
     except:
         print("\nUNKNOWN ERROR A");
         input("Press ENTER to exit");
