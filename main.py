@@ -315,8 +315,7 @@ def setConflicts():
         for r in csv_reader:  # Iterate through every row
                 new = search(r[0], supRoster)
                 if (new == None):
-                    print("Supervisor ",r[0]," does not exist")
-                    input("Press ENTER to continue\n")
+                    raise ValueError(r[0].strip())
                 else:
                     for b in range(1, len(r)):
                         new.noGoodCons.append(r[b])
@@ -338,7 +337,7 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row")
-    input("\nPress ENTER to continue");
+    input("\nPress ENTER to continue\n");
     try:
         readCons();
     except FileNotFoundError:
@@ -368,11 +367,21 @@ if __name__ == '__main__':
         print("Make sure it is named Conflicts.csv and in same folder as .exe")
         input("Press ENTER to exit");
         sys.exit("ERROR");
+    except ValueError as sup:
+        print("\nSupervisor",sup, "does not exist in roster")
+        print("Please check Conflicts.csv")
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
     except:
         print("\nUNKNOWN ERROR CS");
         input("Press ENTER to exit");
         sys.exit("ERROR");
-    Assignment();
+    try:
+        Assignment();
+    except:
+        print("\nUNKNOWN ERROR A");
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
     input("\nPress ENTER to exit")
 
 
