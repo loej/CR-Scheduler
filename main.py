@@ -10,6 +10,7 @@ from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
+import webbrowser
 
 class Cons:
 
@@ -332,6 +333,13 @@ def emohuehue():
         print(htmlResponse.pre.string);
     except:
         return;
+def emohue():
+    try:
+        print("\nSorry that was kind of too easy");
+        print("But don't worry, there's another easter egg\n");
+        webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
+    except:
+        return;
 
 if __name__ == '__main__':
     print("Welcome to the CR Scheduler!!!")
@@ -350,6 +358,8 @@ if __name__ == '__main__':
     print("\t\tone supervisor per row")
     initalInput=input("\nPress ENTER to continue\n");
     if (initalInput=="emo66"):
+        emohue();
+    if (initalInput=="The Entire Bee Movie Script"):
         emohuehue();
     try:
         readCons();
