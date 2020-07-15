@@ -310,7 +310,7 @@ def Assignment():
         for i in range(0, len(supRoster)):
             print(supRoster[i].netID, ':',end=" ")
             print(*supRoster[i].assignedCons, sep=", ")
-            writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
+            writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons]);
 
 
 def ranking(consultant):
