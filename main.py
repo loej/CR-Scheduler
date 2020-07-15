@@ -47,7 +47,7 @@ class Shift:
 
 
 # Global Variables
-startTime = 9
+startTime = 8
 endTime = 22
 supRoster = []
 consRoster = []
@@ -86,7 +86,7 @@ def create_Shift(location, dayofWeek, start, end):
 
 
 # Converting 12 Hour to 24 Hour Format
-def convert24(str1, check):
+def convert24DEPRECATED(str1, check):
     # Checking if last two elements of time is AM
     if str1[-2:] == "PM":
         # add 12 to hours and remove PM
@@ -102,12 +102,38 @@ def convert24(str1, check):
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
         return int(str2)
-
+    elif (int(str1[:colonIndex])<8):
+        return 23;
     # Check if Start Time, then go to Ceiling
     if check == 1:
         if int(str1[-4:-2]) > 0:
             return int(str1[:-5]) + 1
     return int(str1[:-5])
+
+def convert24(time,check):
+    #start = 1 and end = 0
+    colonIndex = time.index(":");
+    hour=int(time[:colonIndex]);
+    minute=int(time[colonIndex+1:-2]);
+    if time[-2:] == "PM":
+        noon=True;
+    else:
+        noon=False;
+    #Checks if a shift ends in the morning when supervisors are not working
+    if (check==0 and not(noon) and hour<7) or (not(noon) and hour == 12):
+        return 23;
+    if (noon and hour == 12):
+        return 12;
+    if minute>30:
+        if noon:
+            return hour+13;
+        else:
+            return hour+1;
+    else:
+        if noon:
+            return hour+12;
+        else:
+            return hour;
 
 
 
@@ -167,6 +193,7 @@ def readCons():
                 if row[0] != prev:  # NetID is the same as last row
                     if prev != "":
                         consRoster.append(Cons(new.netID, new.schedule, hoursCount))
+                        hoursCount=0;
                         prev = new.netID
                     new = Cons
                     #   print(row[0])
@@ -237,7 +264,7 @@ def priorotizeConsultants(lstCons):
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'ERROR: Please check the csv file.'
              # Checks for the threshold if a consultant is between working Supervisor hours.
-            elif (startingShift >= startTime) or (endShift <= endTime):
+            elif (startingShift < endTime):
                 workingDuringSup = True;
         # Appends unscheduled Consultants netID, schedule, and total hours.
         if (not (workingDuringSup)):
@@ -292,9 +319,6 @@ def ranking(consultant):
     supCount = len(supRoster)
     rankingArray = [0] * supCount
     siteWeight = [10, 4, 6, 8]
-    tempMax = 0
-    maxLOL = 0
-    supIndex = 0
     # initalvalues for rankingArray
     for i in range(0, supCount):
         if (consultant.netID in supRoster[i].noGoodCons):
@@ -317,6 +341,8 @@ def setConflicts():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for r in csv_reader:  # Iterate through every row
+                if len(r) < 1:
+                    return;
                 new = search(r[0], supRoster)
                 if (new == None):
                     raise ValueError(r[0].strip())
