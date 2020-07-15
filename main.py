@@ -320,7 +320,7 @@ def ranking(consultant):
         if (consultant.netID in supRoster[i].noGoodCons):
             rankingArray[i] = -999999;
         else:
-            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 30
+            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 25
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
