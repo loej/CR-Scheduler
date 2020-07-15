@@ -359,7 +359,7 @@ if __name__ == '__main__':
     initalInput=input("\nPress ENTER to continue\n");
     if (initalInput=="emo66"):
         emohue();
-    if (initalInput=="The Entire Bee Movie Script"):
+    if (initalInput.replace(" ","") in "TheEntireBeeMovieScript"):
         emohuehue();
     try:
         readCons();
