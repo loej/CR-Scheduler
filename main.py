@@ -339,7 +339,7 @@ def emohue():
         print("But don't worry, there's another easter egg\n");
         webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
     except:
-        return;
+        return
 
 if __name__ == '__main__':
     print("Welcome to the CR Scheduler!!!")
