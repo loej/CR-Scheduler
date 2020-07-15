@@ -6,7 +6,10 @@ import math
 # More information: https://docs.python.org/3/library/operator.html
 import operator
 import sys
-
+from requests import get
+from requests.exceptions import RequestException
+from contextlib import closing
+from bs4 import BeautifulSoup
 
 class Cons:
 
@@ -338,6 +341,10 @@ if __name__ == '__main__':
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row")
     input("\nPress ENTER to continue\n");
+
+
+
+
     try:
         readCons();
     except FileNotFoundError:
