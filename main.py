@@ -334,7 +334,7 @@ def emohuehue():
         return;
 
 if __name__ == '__main__':
-    print("Welecome to the CR Scheduler!!!")
+    print("Welcome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
     print("Last update: emo66 July 15, 2020\n")
     print("Ensure the following files are in the same folder as the executable:")
