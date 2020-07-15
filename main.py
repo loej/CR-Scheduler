@@ -382,6 +382,6 @@ if __name__ == '__main__':
         print("\nUNKNOWN ERROR A");
         input("Press ENTER to exit");
         sys.exit("ERROR");
-    input("\nPress ENTER to exit")
+    input("\nPress ENTER to exit");
 
 
