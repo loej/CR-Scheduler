@@ -5,6 +5,7 @@ import csv
 import math
 # More information: https://docs.python.org/3/library/operator.html
 import operator
+import sys
 
 
 class Cons:
@@ -146,59 +147,61 @@ def search(target, roster):
 # Reads CSV and creates Array of Workers #
 # def read_CSV() :
 # ---------------------------------------------READING CONS --------------------------------->
-with open(".\\Cons.csv") as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count = 0
-    prev = ""
-    hoursCount = 0;
-    for row in csv_reader:  # Iterate through every row
-        if line_count != 0:  # Make sure not the Top Column
-            # print(row[0])
-            if row[0] == "":  # Error check in case netID field is empty
-                line_count += 1
-                # print("hello world")
-                continue
-            if row[0] != prev:  # NetID is the same as last row
-                if prev != "":
-                    consRoster.append(Cons(new.netID, new.schedule, hoursCount))
-                    prev = new.netID
-                new = Cons
-                #   print(row[0])
-                new.netID = row[0]  # Initialize netID
-                new.schedule = []
-            [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
-            new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
-            hoursCount += temp4 - temp3;
-            prev = new.netID
-        line_count += 1
-    consRoster.append(Cons(new.netID, new.schedule, hoursCount))
-    hoursCount = 0;
+def readCons():
+    with open(".\\Cons.csv") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        prev = ""
+        hoursCount = 0;
+        for row in csv_reader:  # Iterate through every row
+            if line_count != 0:  # Make sure not the Top Column
+                # print(row[0])
+                if row[0] == "":  # Error check in case netID field is empty
+                    line_count += 1
+                    # print("hello world")
+                    continue
+                if row[0] != prev:  # NetID is the same as last row
+                    if prev != "":
+                        consRoster.append(Cons(new.netID, new.schedule, hoursCount))
+                        prev = new.netID
+                    new = Cons
+                    #   print(row[0])
+                    new.netID = row[0]  # Initialize netID
+                    new.schedule = []
+                [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
+                new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
+                hoursCount += temp4 - temp3;
+                prev = new.netID
+            line_count += 1
+        consRoster.append(Cons(new.netID, new.schedule, hoursCount))
+        hoursCount = 0;
 
 # Reads sups.csv file
-with open(".\\Sups.csv") as csv_file2:
-    csv_reader = csv.reader(csv_file2, delimiter=',')
-    line_count = 0
-    prev = ""
-    for row in csv_reader:  # Iterate through every row
-        if line_count != 0:  # Make sure not the Top Column
-            # print(row[0])
-            if row[0] == "":  # Error check in case netID field is empty
-                line_count += 1
-                # print("hello world")
-                continue
-            if row[0] != prev:  # NetID is the same as last row
-                if prev != "":
-                    #  print(sched)
-                    supRoster.append(Sups(netID, sched))
-                    prev = new.netID
-                #   print(row[0])
-                netID = row[0]  # Initialize netID
-                rows, cols = (7, 25)
-                sched = [[0 for i in range(cols)] for j in range(rows)]
-            populate2D(sched, row[1], row[3], row[4], row[5])
-            prev = netID
-        line_count += 1
-    supRoster.append(Sups(netID, sched))
+def readSups():
+    with open(".\\Sups.csv") as csv_file2:
+        csv_reader = csv.reader(csv_file2, delimiter=',')
+        line_count = 0
+        prev = ""
+        for row in csv_reader:  # Iterate through every row
+            if line_count != 0:  # Make sure not the Top Column
+                # print(row[0])
+                if row[0] == "":  # Error check in case netID field is empty
+                    line_count += 1
+                    # print("hello world")
+                    continue
+                if row[0] != prev:  # NetID is the same as last row
+                    if prev != "":
+                        #  print(sched)
+                        supRoster.append(Sups(netID, sched))
+                        prev = netID
+                    #   print(row[0])
+                    netID = row[0]  # Initialize netID
+                    rows, cols = (7, 25)
+                    sched = [[0 for i in range(cols)] for j in range(rows)]
+                populate2D(sched, row[1], row[3], row[4], row[5])
+                prev = netID
+            line_count += 1
+        supRoster.append(Sups(netID, sched))
 
 # Prioritizes consultants using consRoster list.
 def priorotizeConsultants(lstCons):
@@ -274,7 +277,8 @@ def Assignment():
     with open('Results.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         for i in range(0, len(supRoster)):
-            print(supRoster[i].netID, ': ', *supRoster[i].assignedCons, sep=", ")
+            print(supRoster[i].netID, ':',end=" ")
+            print(*supRoster[i].assignedCons, sep=", ")
             writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
 
 
@@ -292,7 +296,7 @@ def ranking(consultant):
         if (consultant.netID in supRoster[i].noGoodCons):
             rankingArray[i] = -999999;
         else:
-            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 20
+            rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 25
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
@@ -320,7 +324,54 @@ def setConflicts():
                 line_count+=1
 
 if __name__ == '__main__':
-    setConflicts();
+    print("Welecome to the CR Scheduler!!!")
+    print("By: emo66, hs770, jfm203")
+    print("Last update: emo66 July 15, 2020\n")
+    print("Ensure the following files are in the same folder as the executable:")
+    print("\nCons.csv")
+    print("\tZed Report of Assigned Shifts of Consultants")
+    print("\nSups.csv")
+    print("\tZed Report of Assigned Shifts of Supervisors")
+    print("\tAny SITs on this list must be moved to Cons.csv")
+    print("\nConflicts.csv")
+    print("\tContains conflicts of interest between supervisors and consultants")
+    print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
+    print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
+    print("\t\tone supervisor per row")
+    input("\nPress ENTER to continue");
+    try:
+        readCons();
+    except FileNotFoundError:
+        print("\nCONS File Does Not Exist");
+        print("Make sure it is named Cons.csv and in same folder as .exe")
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    except:
+        print("\nUNKNOWN ERROR C");
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    try:
+        readSups();
+    except FileNotFoundError:
+        print("\nSUPS File Does Not Exist");
+        print("Make sure it is named Sups.csv and in same folder as .exe")
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    except:
+        print("\nUNKNOWN ERROR S");
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    try:
+        setConflicts();
+    except FileNotFoundError:
+        print("\nCONFLICTS File Does Not Exist");
+        print("Make sure it is named Conflicts.csv and in same folder as .exe")
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    except:
+        print("\nUNKNOWN ERROR CS");
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
     Assignment();
     input("\nPress ENTER to exit")
 
