@@ -317,16 +317,16 @@ def ranking(consultant):
     siteWeight = [10, 4, 6, 8]
     # initalvalues for rankingArray
     for i in range(0, supCount):
-        if (consultant.netID in supRoster[i].noGoodCons):
+        if consultant.netID in supRoster[i].noGoodCons:
             rankingArray[i] = -999999;
         else:
             rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 25
     for i in range(0, len(consultant.schedule)):
         focusedShift = consultant.schedule[i]
         for a in range(0, supCount):
-            if (1 == supRoster[a].schedule[focusedShift.dayofWeek][0]):
+            if 1 == supRoster[a].schedule[focusedShift.dayofWeek][0]:
                 for hour in range(focusedShift.start + 1, focusedShift.end + 1):
-                    if (supRoster[a].schedule[focusedShift.dayofWeek][hour]):
+                    if supRoster[a].schedule[focusedShift.dayofWeek][hour]:
                         rankingArray[a] = rankingArray[a] + 1 + siteWeight[focusedShift.location]
     supIndex = rankingArray.index(max(rankingArray))
     return supIndex
