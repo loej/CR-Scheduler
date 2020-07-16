@@ -346,7 +346,7 @@ def setConflicts():
                     for b in range(1, len(r)):
                         new.noGoodCons.append(r[b])
                         #print("Success")
-                line_count+=1
+                line_count+=1;
 
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
