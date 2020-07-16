@@ -314,7 +314,7 @@ def Assignment():
 
 
 def ranking(consultant):
-    consultantThreshold = math.floor(len(consRoster) / len(supRoster))
+    consultantThreshold = math.floor(len(consRoster) / len(supRoster));
     # print("Threshold",consultantThreshold);
     supCount = len(supRoster)
     rankingArray = [0] * supCount
