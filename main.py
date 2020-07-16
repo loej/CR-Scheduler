@@ -160,7 +160,7 @@ def populate2D(arr, location, day, start, end):
     if day == "Saturday":
         arr[6][0] = 1
         i = 6
-    for j in range(start + 1, end + 2):
+    for j in range(start + 1, end + 1):
         arr[i][j] = 1
 #
 def search(target, roster):
@@ -362,7 +362,7 @@ if __name__ == '__main__':
     print("\tContains conflicts of interest between supervisors and consultants")
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
-    print("\t\tone supervisor per row")
+    print("\t\tone supervisor per row. This list may be empty, but must exist.")
     input("\nPress ENTER to continue\n");
     try:
         readCons();
@@ -371,8 +371,9 @@ if __name__ == '__main__':
         print("Make sure it is named Cons.csv and in same folder as .exe")
         input("Press ENTER to exit");
         sys.exit("ERROR");
-    except:
+    except Exception as x:
         print("\nUNKNOWN ERROR C");
+        print(x);
         input("Press ENTER to exit");
         sys.exit("ERROR");
     try:
@@ -382,8 +383,9 @@ if __name__ == '__main__':
         print("Make sure it is named Sups.csv and in same folder as .exe")
         input("Press ENTER to exit");
         sys.exit("ERROR");
-    except:
+    except Exception as x:
         print("\nUNKNOWN ERROR S");
+        print(x);
         input("Press ENTER to exit");
         sys.exit("ERROR");
     try:
@@ -398,14 +400,21 @@ if __name__ == '__main__':
         print("Please check Conflicts.csv")
         input("Press ENTER to exit");
         sys.exit("ERROR");
-    except:
+    except Exception as x:
         print("\nUNKNOWN ERROR CS");
+        print(x);
         input("Press ENTER to exit");
         sys.exit("ERROR");
     try:
         Assignment()
-    except:
+    except PermissionError:
+        print("\nUnable to write to Results.csv");
+        print("Please close Results.csv if open");
+        input("Press ENTER to exit");
+        sys.exit("ERROR");
+    except Exception as x:
         print("\nUNKNOWN ERROR A");
+        print(x);
         input("Press ENTER to exit");
         sys.exit("ERROR");
     input("\nPress ENTER to exit");
