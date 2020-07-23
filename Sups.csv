@@ -1,8 +1,8 @@
 Owner,Schedule,Location,Day of Week,Start,End,Hours,Requests,Requesters
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
+cli14,BUS-ARC-Sups,Busch Campus,Monday,1:30PM,4:00PM,2.5,0,
+cli14,BUS-ARC-Sups,Busch Campus,Wednesday,5:00PM,8:00PM,3,0,
+cli14,BUS-ARC-Sups,Busch Campus,Friday,10:00AM,2:30PM,4.5,0,
+cli14,BUS-ARC-Sups,Busch Campus,Wednesday,10:00AM,2:30PM,4.5,0,
 dc991,BUS-ARC-Sups,Busch Campus,Saturday,10:45AM,3:20PM,4.58,0,
 dc991,BUS-BEST-Sups,Busch Campus,Tuesday,8:00AM,9:00AM,1,0,
 dc991,BUS-ARC-Sups,Busch Campus,Tuesday,9:00AM,12:00PM,3,0,

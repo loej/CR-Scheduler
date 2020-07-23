@@ -47,6 +47,8 @@ startTime = 8
 endTime = 22
 supRoster = []
 consRoster = []
+sitRoster = []
+sitDict = {}
 
 
 # Creates shift based off of location, day of the week, and start and end time of shifts.
@@ -98,7 +100,7 @@ def convert24DEPRECATED(str1, check):
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
         return int(str2)
-    elif (int(str1[:colonIndex])<8):
+    elif (int(str1[:colonIndex]) < 8):
         return 23;
     # Check if Start Time, then go to Ceiling
     if check == 1:
@@ -106,31 +108,31 @@ def convert24DEPRECATED(str1, check):
             return int(str1[:-5]) + 1
     return int(str1[:-5])
 
-def convert24(time,check):
-    #start = 1 and end = 0
+
+def convert24(time, check):
+    # start = 1 and end = 0
     colonIndex = time.index(":");
-    hour=int(time[:colonIndex]);
-    minute=int(time[colonIndex+1:-2]);
+    hour = int(time[:colonIndex]);
+    minute = int(time[colonIndex + 1:-2]);
     if time[-2:] == "PM":
-        noon=True;
+        noon = True;
     else:
-        noon=False;
-    #Checks if a shift ends in the morning when supervisors are not working
-    if (check==0 and not(noon) and hour<7) or (not(noon) and hour == 12):
+        noon = False;
+    # Checks if a shift ends in the morning when supervisors are not working
+    if (check == 0 and not (noon) and hour < 7) or (not (noon) and hour == 12):
         return 23;
     if (noon and hour == 12):
         return 12;
-    if minute>30:
+    if minute > 30:
         if noon:
-            return hour+13;
+            return hour + 13;
         else:
-            return hour+1;
+            return hour + 1;
     else:
         if noon:
-            return hour+12;
+            return hour + 12;
         else:
             return hour;
-
 
 
 # Populate2D Array for Sups.Schedule
@@ -162,12 +164,16 @@ def populate2D(arr, location, day, start, end):
         i = 6
     for j in range(start + 1, end + 1):
         arr[i][j] = 1
+
+
 #
 def search(target, roster):
     for i in range(0, len(roster)):
-        if(target == roster[i].netID):
+        if (target == roster[i].netID):
             return roster[i]
     return None
+
+
 # ------------------------------------->
 # Hassaan
 # Reads CSV and creates Array of Workers #
@@ -189,7 +195,7 @@ def readCons():
                 if row[0] != prev:  # NetID is the same as last row
                     if prev != "":
                         consRoster.append(Cons(new.netID, new.schedule, hoursCount))
-                        hoursCount=0;
+                        hoursCount = 0;
                         prev = new.netID
                     new = Cons
                     #   print(row[0])
@@ -203,21 +209,35 @@ def readCons():
         consRoster.append(Cons(new.netID, new.schedule, hoursCount))
         hoursCount = 0;
 
+
 # Reads sups.csv file
 def readSups():
+    isSit = False
+    sit = Cons
+    hoursCount = 0
+    tempList = []
     with open(".\\Sups.csv") as csv_file2:
         csv_reader = csv.reader(csv_file2, delimiter=',')
         line_count = 0
         prev = ""
-        for row in csv_reader:  # Iterate through every row
-            if line_count != 0:  # Make sure not the Top Column
-                # print(row[0])
-                if row[0] == "":  # Error check in case netID field is empty
-                    line_count += 1
-                    # print("hello world")
-                    continue
+        supListRaw = iter(csv_reader)
+        next(supListRaw)
+        for row in supListRaw:  # Iterate through every row
+            if row[0] == "":  # Error check in case netID field is empty
+                # print("hello world")
+                continue
+            if row[0] in sitRoster:
+                if not(row[0] in sitDict):
+                    tempList.append(0)
+                    sitDict[row[0]] = tempList
+                tempList = sitDict.get(row[0])
+                [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
+                tempList.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
+                tempList[0] = tempList[0] + (temp4 - temp3)
+                sitDict[row[0]] = tempList
+            else:
                 if row[0] != prev:  # NetID is the same as last row
-                    if prev != "":
+                    if prev != "" and not (prev in sitRoster):
                         #  print(sched)
                         supRoster.append(Sups(netID, sched))
                         prev = netID
@@ -227,11 +247,16 @@ def readSups():
                     sched = [[0 for i in range(cols)] for j in range(rows)]
                 populate2D(sched, row[1], row[3], row[4], row[5])
                 prev = netID
-            line_count += 1
-        supRoster.append(Sups(netID, sched))
+        if isSit:
+            print("", end="")
+        else:
+            supRoster.append(Sups(netID, sched))
+
 
 # Prioritizes consultants using consRoster list.
 def priorotizeConsultants(lstCons):
+    tempSched=[]
+    tempSITSched=[]
     # List of all Scheduled consultants
     scheduledConsultants = []
     # List of all Unscheduled consultants
@@ -259,26 +284,39 @@ def priorotizeConsultants(lstCons):
             # Checks for errors if the list is empty.
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'ERROR: Please check the csv file.'
-             # Checks for the threshold if a consultant is between working Supervisor hours.
+            # Checks for the threshold if a consultant is between working Supervisor hours.
             elif (startingShift < endTime):
                 workingDuringSup = True;
         # Appends unscheduled Consultants netID, schedule, and total hours.
         if (not (workingDuringSup)):
             unscheduledConsultants.append(Cons(lstCons[obj].netID, lstCons[obj].schedule, lstCons[obj].totalHours))
         else:
-        # Populates the empty dictionary with the netID and total hours.
+            # Populates the empty dictionary with the netID and total hours.
             consDictionary[objNetid] = lstCons[obj].totalHours;
             workingDuringSup = False;
     # Sorts the values inside the dictionary.
+    for dictionarySits in sitDict:
+        tempSITSched=sitDict[dictionarySits]
+        if dictionarySits in consDictionary:
+            consDictionary[dictionarySits]=tempSITSched[0]+consDictionary[dictionarySits]
+        else:
+            consDictionary[dictionarySits]=tempSITSched[0]
     sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)));
     # This for loop appends the keys from the dictionary into the scheduled consultants.
     for cons in sortedCons.keys():
         for i in range(len(lstCons)):
             if (cons == lstCons[i].netID):
-                scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours));
+                if cons in sitDict:
+                    tempSched=lstCons[i].schedule
+                    tempSITSched=sitDict[cons]
+                    tempSched.extend(tempSITSched[1:])
+                    scheduledConsultants.append(Cons(lstCons[i].netID, tempSched, lstCons[i].totalHours+tempSITSched[0]));
+                else:
+                    scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours));
                 break;
     # returns both lists inside a list.
     return [scheduledConsultants, unscheduledConsultants]
+
 
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
@@ -304,7 +342,7 @@ def Assignment():
     with open('Results.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         for i in range(0, len(supRoster)):
-            print(supRoster[i].netID, ':',end=" ")
+            print(supRoster[i].netID, ':', end=" ")
             print(*supRoster[i].assignedCons, sep=", ")
             writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
 
@@ -337,16 +375,34 @@ def setConflicts():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for r in csv_reader:  # Iterate through every row
-                if len(r) < 1:
-                    return;
-                new = search(r[0], supRoster)
-                if (new == None):
-                    raise ValueError(r[0].strip())
-                else:
-                    for b in range(1, len(r)):
-                        new.noGoodCons.append(r[b])
-                        #print("Success")
-                line_count+=1;
+            if len(r) < 1:
+                return;
+            new = search(r[0], supRoster)
+            if (new == None):
+                raise ValueError(r[0].strip())
+            else:
+                for b in range(1, len(r)):
+                    new.noGoodCons.append(r[b])
+                    # print("Success")
+            line_count += 1;
+
+
+def getSITS():
+    inputSITS = ""
+    inputSITS = input("Input this semseter's SITs (separated by commas): ")
+    commaIndex = -1;
+    count = 0
+    gucci = True
+    while (gucci):
+        try:
+            commaIndex = inputSITS.index(',')
+        except ValueError:
+            gucci = False
+            sitRoster.append(inputSITS[:].replace(" ", ""))
+            return
+        sitRoster.append(inputSITS[:commaIndex].replace(" ", ""))
+        inputSITS = inputSITS[commaIndex + 1:]
+
 
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
@@ -364,6 +420,8 @@ if __name__ == '__main__':
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row. This list may be empty, but must exist.")
     input("\nPress ENTER to continue\n");
+    getSITS()
+    print("")
     try:
         readCons();
     except FileNotFoundError:
@@ -396,7 +454,7 @@ if __name__ == '__main__':
         input("Press ENTER to exit");
         sys.exit("ERROR");
     except ValueError as sup:
-        print("\nSupervisor",sup, "does not exist in roster")
+        print("\nSupervisor", sup, "does not exist in roster")
         print("Please check Conflicts.csv")
         input("Press ENTER to exit");
         sys.exit("ERROR");
@@ -418,5 +476,3 @@ if __name__ == '__main__':
         input("Press ENTER to exit");
         sys.exit("ERROR");
     input("\nPress ENTER to exit");
-
-

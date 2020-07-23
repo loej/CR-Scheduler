@@ -318,7 +318,3 @@ zmk15,BUS-ARC-Cons,Busch Campus,Monday,11:45AM,3:15PM,3.5,10,"rp928 (2), zmk15 (
 zmk15,BUS-ARC-Cons,Busch Campus,Wednesday,11:30AM,3:00PM,3.5,16,"yf184 (3), ejc185 (5), lo153 (5), rp928 (1), zmk15 (2), ktm96 (3), nad129 (2), aar195 (2), tjb234 (1), jbm200 (5), bar151 (1), jp1682 (1), pkc42 (3), ava45 (2), ms2651 (1), spp131 (1)"
 zmk15,BUS-ARC-Cons,Busch Campus,Friday,11:30AM,3:00PM,3.5,16,"smk333 (3), lo153 (5), rp928 (1), vsl22 (1), zmk15 (1), aar195 (2), tjb234 (1), jfm203 (1), jbm200 (5), jwn32 (2), ejc190 (2), gct20 (2), kwl47 (5), jp1682 (1), bwr29 (5), dpc121 (1)"
 zmk15,BUS-ARC-Cons,Busch Campus,Wednesday,11:30AM,3:00PM,3.5,0,
-cli14,BUS-ARC-Sups,Busch Campus,Monday,1:30PM,4:00PM,2.5,0,
-cli14,BUS-ARC-Sups,Busch Campus,Wednesday,5:00PM,8:00PM,3,0,
-cli14,BUS-ARC-Sups,Busch Campus,Friday,10:00AM,2:30PM,4.5,0,
-cli14,BUS-ARC-Sups,Busch Campus,Wednesday,10:00AM,2:30PM,4.5,0,
