@@ -51,6 +51,8 @@ startTime = 8
 endTime = 22
 supRoster = []
 consRoster = []
+sitRoster = []
+sitDict = {}
 
 
 # Creates shift based off of location, day of the week, and start and end time of shifts.
@@ -310,11 +312,11 @@ def Assignment():
         for i in range(0, len(supRoster)):
             print(supRoster[i].netID, ':',end=" ")
             print(*supRoster[i].assignedCons, sep=", ")
-            writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons]);
+            writer.writerow([supRoster[i].netID, *supRoster[i].assignedCons])
 
 
 def ranking(consultant):
-    consultantThreshold = math.floor(len(consRoster) / len(supRoster));
+    consultantThreshold = math.floor(len(consRoster) / len(supRoster))
     # print("Threshold",consultantThreshold);
     supCount = len(supRoster)
     rankingArray = [0] * supCount
@@ -341,16 +343,16 @@ def setConflicts():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for r in csv_reader:  # Iterate through every row
-                if len(r) < 1:
-                    return;
-                new = search(r[0], supRoster)
-                if (new == None):
-                    raise ValueError(r[0].strip())
-                else:
-                    for b in range(1, len(r)):
-                        new.noGoodCons.append(r[b])
-                        #print("Success")
-                line_count+=1
+            if len(r) < 1:
+                return;
+            new = search(r[0], supRoster)
+            if (new == None):
+                raise ValueError(r[0].strip())
+            else:
+                for b in range(1, len(r)):
+                    new.noGoodCons.append(r[b])
+                    # print("Success")
+            line_count += 1;
 def emohuehue():
     try:
         with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
@@ -368,7 +370,7 @@ def emohue():
         return
 
 if __name__ == '__main__':
-    print("Welcome to the CR Scheduler!!!")
+    print("Welecome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
     print("Last update: emo66 July 15, 2020\n")
     print("Ensure the following files are in the same folder as the executable:")
@@ -388,6 +390,8 @@ if __name__ == '__main__':
             emohuehue();
         if (initialInput == "emo66"):
             emohue();
+    getSITS()
+    print("")
     try:
         readCons();
     except FileNotFoundError:
