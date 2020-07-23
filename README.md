@@ -126,7 +126,7 @@ Locations :
 
 ### prioritizeConultants()
 
-- wip
+- Proritize Consultants takes in the list consRoster[] and schedules them off of location, dayofWeek, startingShift, and endShift. It sorts both types of consultants: scheduled[] and unscheduled[] consultants. Unscheduled consultants are not able to meet the criteria to meet a supervisor between the times they work. This method return a list of both scheduled and unscheduled consultants: [scheduledConsultants, unscheduledConsultants].
 
 ### Assignment()
 
