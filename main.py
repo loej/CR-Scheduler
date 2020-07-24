@@ -48,7 +48,6 @@ endTime = 22
 supRoster = []
 consRoster = []
 sitRoster = []
-sitDict = {}
 
 
 # Creates shift based off of location, day of the week, and start and end time of shifts.
@@ -170,8 +169,8 @@ def populate2D(arr, location, day, start, end):
 def search(target, roster):
     for i in range(0, len(roster)):
         if (target == roster[i].netID):
-            return roster[i]
-    return None
+            return [roster[i],i]
+    return [None,-1]
 
 
 # ------------------------------------->
@@ -214,44 +213,41 @@ def readCons():
 def readSups():
     isSit = False
     sit = Cons
+    sup = Sups
     hoursCount = 0
     tempList = []
-    with open(".\\Sups.csv") as csv_file2:
-        csv_reader = csv.reader(csv_file2, delimiter=',')
+    tempIdx = 0
+    tempNetID=0
+    rows, cols = (7, 25)
+    tempListDouble = [[0 for i in range(cols)] for j in range(rows)]
+    with open(".\\Sups.csv", 'r') as csv_file2:
+        supListRaw = csv.reader(csv_file2, delimiter=',')
         line_count = 0
         prev = ""
-        supListRaw = iter(csv_reader)
-        next(supListRaw)
-        for row in supListRaw:  # Iterate through every row
-            if row[0] == "":  # Error check in case netID field is empty
-                # print("hello world")
+        tempCount=0;
+        supList = list(supListRaw)
+        #next(supListRaw)
+        for idx in range (1,len(supList)):
+            if supList[idx][0] == "":
                 continue
-            if row[0] in sitRoster:
-                if not(row[0] in sitDict):
-                    tempList.append(0)
-                    sitDict[row[0]] = tempList
-                tempList = sitDict.get(row[0])
-                [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
-                tempList.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
-                tempList[0] = tempList[0] + (temp4 - temp3)
-                sitDict[row[0]] = tempList
+            if supList[idx][0] in sitRoster:
+                [temp1, temp2, temp3, temp4] = create_Shift(supList[idx][1],supList[idx][3],supList[idx][4],supList[idx][5])
+                tempList.append(Shift(temp1,temp2,temp3,temp4))
+                hoursCount += temp4 - temp3
+                if idx+1 == len(supList) or supList[idx+1][0] != supList[idx][0]:
+                    [tempNetID,tempIdx] = search(supList[idx][0],consRoster)
+                    if tempNetID == None:
+                        consRoster.append(Cons(supList[idx][0],tempList,hoursCount))
+                    else:
+                        consRoster[tempIdx].schedule.extend(tempList)
+                        consRoster[tempIdx].totalHours+=hoursCount
+                    tempList = []
+                    hoursCount = 0
             else:
-                if row[0] != prev:  # NetID is the same as last row
-                    if prev != "" and not (prev in sitRoster):
-                        #  print(sched)
-                        supRoster.append(Sups(netID, sched))
-                        prev = netID
-                    #   print(row[0])
-                    netID = row[0]  # Initialize netID
-                    rows, cols = (7, 25)
-                    sched = [[0 for i in range(cols)] for j in range(rows)]
-                populate2D(sched, row[1], row[3], row[4], row[5])
-                prev = netID
-        if isSit:
-            print("", end="")
-        else:
-            supRoster.append(Sups(netID, sched))
-
+                populate2D(tempListDouble, supList[idx][1],supList[idx][3],supList[idx][4],supList[idx][5])
+                if idx+1 == len(supList) or supList[idx+1][0] != supList[idx][0]:
+                    supRoster.append(Sups(supList[idx][0],tempListDouble))
+                    tempListDouble = [[0 for i in range(cols)] for j in range(rows)]
 
 # Prioritizes consultants using consRoster list.
 def priorotizeConsultants(lstCons):
@@ -295,12 +291,6 @@ def priorotizeConsultants(lstCons):
             consDictionary[objNetid] = lstCons[obj].totalHours;
             workingDuringSup = False;
     # Sorts the values inside the dictionary.
-    for dictionarySits in sitDict:
-        tempSITSched=sitDict[dictionarySits]
-        if dictionarySits in consDictionary:
-            consDictionary[dictionarySits]=tempSITSched[0]+consDictionary[dictionarySits]
-        else:
-            consDictionary[dictionarySits]=tempSITSched[0]
     sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)));
     # This for loop appends the keys from the dictionary into the scheduled consultants.
     for cons in sortedCons.keys():
@@ -371,22 +361,22 @@ def ranking(consultant):
 
 
 def setConflicts():
+    tempSup = Sups;
+    tempIdx =0 ;
     with open(".\\Conflicts.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
         for r in csv_reader:  # Iterate through every row
             if len(r) < 1:
                 return;
-            new = search(r[0], supRoster)
-            if (new == None):
+            if r[0] in sitRoster:
+                continue
+            [tempSup,tempIdx] = search(r[0], supRoster)
+            if (tempSup == None):
                 raise ValueError(r[0].strip())
             else:
                 for b in range(1, len(r)):
-                    new.noGoodCons.append(r[b])
+                    tempSup.noGoodCons.append(r[b])
                     # print("Success")
-            line_count += 1;
-
-
 def getSITS():
     inputSITS = ""
     inputSITS = input("Input this semseter's SITs (separated by commas): ")
@@ -407,7 +397,7 @@ def getSITS():
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
-    print("Last update: emo66 July 15, 2020\n")
+    print("Last update: emo66 July 24, 2020\n")
     print("Ensure the following files are in the same folder as the executable:")
     print("\nCons.csv")
     print("\tZed Report of Assigned Shifts of Consultants")
