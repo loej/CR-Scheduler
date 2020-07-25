@@ -6,6 +6,11 @@ import math
 # More information: https://docs.python.org/3/library/operator.html
 import operator
 import sys
+from requests import get
+from requests.exceptions import RequestException
+from contextlib import closing
+from bs4 import BeautifulSoup
+import webbrowser
 
 
 class Cons:
@@ -305,7 +310,7 @@ def priorotizeConsultants(lstCons):
 # Go through cons list sequentially. For each cons, go through supervisor list.
 def Assignment():
     [schedCons, unschedCons] = priorotizeConsultants(consRoster)
-    [tempIdx,tempMin] = [-1,-1]
+    [tempIdx,tempMin] = [-1, -1]
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
@@ -387,6 +392,25 @@ def getSITS():
         inputSITS = inputSITS[commaIndex + 1:]
 
 
+def emohuehue():
+    try:
+        with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/", stream=True)) as temp:
+            response = temp.content
+        htmlResponse = BeautifulSoup(response, 'html.parser')
+        print(htmlResponse.pre.string)
+    except:
+        return
+
+
+def emohue():
+    try:
+        print("\nSorry that was kind of too easy")
+        print("But don't worry, there's another easter egg\n")
+        webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
+    except:
+        return
+
+
 if __name__ == '__main__':
     errorList = []
     print("Welcome to the CR Scheduler!!!")
@@ -403,7 +427,12 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row.")
-    input("\nPress ENTER to continue\n")
+    initialInput = input("\nPress ENTER to continue\n")
+    if initialInput != "":
+        if initialInput.replace(" ", "").lower() in "theentirebeemoviescript":
+            emohuehue();
+        if initialInput == "emo66":
+            emohue();
     getSITS()
     print("")
     try:
