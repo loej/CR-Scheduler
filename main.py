@@ -6,7 +6,11 @@ import math
 # More information: https://docs.python.org/3/library/operator.html
 import operator
 import sys
-
+from requests import get
+from requests.exceptions import RequestException
+from contextlib import closing
+from bs4 import BeautifulSoup
+import webbrowser
 
 class Cons:
 
@@ -163,8 +167,6 @@ def populate2D(arr, location, day, start, end):
         i = 6
     for j in range(start + 1, end + 1):
         arr[i][j] = 1
-
-
 #
 def search(target, roster):
     for i in range(0, len(roster)):
@@ -299,7 +301,6 @@ def priorotizeConsultants(lstCons):
     # returns both lists inside a list.
     return [scheduledConsultants, unscheduledConsultants]
 
-
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 # Go through cons list sequentially. For each cons, go through supervisor list.
@@ -369,8 +370,6 @@ def setConflicts():
                 for b in range(1, len(r)):
                     tempSup.noGoodCons.append(r[b])
                     # print("Success")
-
-
 def getSITS():
     inputSITS = ""
     inputSITS = input("Input this semseter's SITs (separated by commas): ")
@@ -386,12 +385,25 @@ def getSITS():
             return
         sitRoster.append(inputSITS[:commaIndex].replace(" ", ""))
         inputSITS = inputSITS[commaIndex + 1:]
-
-
+def emohuehue():
+    try:
+        with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
+            response=temp.content;
+        htmlResponse=BeautifulSoup(response,'html.parser');
+        print(htmlResponse.pre.string);
+    except:
+        return
+def emohue():
+    try:
+        print("\nSorry that was kind of too easy");
+        print("But don't worry, there's another easter egg\n");
+        webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
+    except:
+        return
 if __name__ == '__main__':
     print("Welecome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
-    print("Last update: emo66 July 24, 2020\n")
+    print("Last update: emo66 July 25, 2020\n")
     print("Ensure the following files are in the same folder as the executable:")
     print("\nCons.csv")
     print("\tZed Report of Assigned Shifts of Consultants")
@@ -403,7 +415,12 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row. This list may be empty, but must exist.")
-    input("\nPress ENTER to continue\n")
+    initialInput=input("\nPress ENTER to continue\n")
+    if(initialInput!=""):
+        if (initialInput.replace(" ","") in "TheEntireBeeMovieScript"):
+            emohuehue();
+        if (initialInput == "emo66"):
+            emohue();
     getSITS()
     print("")
     try:
