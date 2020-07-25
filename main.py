@@ -12,6 +12,7 @@ from contextlib import closing
 from bs4 import BeautifulSoup
 import webbrowser
 
+
 class Cons:
 
     # Instance attributes
@@ -167,6 +168,8 @@ def populate2D(arr, location, day, start, end):
         i = 6
     for j in range(start + 1, end + 1):
         arr[i][j] = 1
+
+
 #
 def search(target, roster):
     for i in range(0, len(roster)):
@@ -301,24 +304,23 @@ def priorotizeConsultants(lstCons):
     # returns both lists inside a list.
     return [scheduledConsultants, unscheduledConsultants]
 
+
 # Assignment ()
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 # Go through cons list sequentially. For each cons, go through supervisor list.
 def Assignment():
     [schedCons, unschedCons] = priorotizeConsultants(consRoster)
-    supD = {}
+    [tempIdx, tempMin] = [-1, -1]
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
     for cons in unschedCons:
-        for sup in supRoster:
-            supD[sup.netID] = len(sup.assignedCons)
-        sortedSupD = dict(sorted(supD.items(), key=operator.itemgetter(1)))
-        for i in range(len(supRoster)):
-            keyList = list(sortedSupD.keys())
-            if keyList[0] == supRoster[i].netID:
-                supRoster[i].assignedCons.append(cons.netID)
-                break
+        [tempIdx, tempMin] = [-1, sys.maxsize]
+        for idx in range(0, len(supRoster)):
+            if len(supRoster[idx].assignedCons) < tempMin:
+                tempMin = len(supRoster[idx].assignedCons)
+                tempIdx = idx
+        supRoster[tempIdx].assignedCons.append(cons.netID)
     for sup in supRoster:
         sup.assignedCons.sort()
     # Outputs the results in a csv file.
@@ -370,6 +372,8 @@ def setConflicts():
                 for b in range(1, len(r)):
                     tempSup.noGoodCons.append(r[b])
                     # print("Success")
+
+
 def getSITS():
     inputSITS = ""
     inputSITS = input("Input this semseter's SITs (separated by commas): ")
@@ -385,23 +389,29 @@ def getSITS():
             return
         sitRoster.append(inputSITS[:commaIndex].replace(" ", ""))
         inputSITS = inputSITS[commaIndex + 1:]
+
+
 def emohuehue():
     try:
-        with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/",stream=True)) as temp:
-            response=temp.content;
-        htmlResponse=BeautifulSoup(response,'html.parser');
-        print(htmlResponse.pre.string);
+        with closing(get("https://web.njit.edu/~cm395/theBeeMovieScript/", stream=True)) as temp:
+            response = temp.content
+        htmlResponse = BeautifulSoup(response, 'html.parser')
+        print(htmlResponse.pre.string)
     except:
         return
+
+
 def emohue():
     try:
-        print("\nSorry that was kind of too easy");
-        print("But don't worry, there's another easter egg\n");
+        print("\nSorry that was kind of too easy")
+        print("But don't worry, there's another easter egg\n")
         webbrowser.open("https://youtu.be/dQw4w9WgXcQ")
     except:
         return
+
+
 if __name__ == '__main__':
-    print("Welecome to the CR Scheduler!!!")
+    print("Welcome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
     print("Last update: emo66 July 25, 2020\n")
     print("Ensure the following files are in the same folder as the executable:")
@@ -415,11 +425,11 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row. This list may be empty, but must exist.")
-    initialInput=input("\nPress ENTER to continue\n")
-    if(initialInput!=""):
-        if (initialInput.replace(" ","") in "TheEntireBeeMovieScript"):
+    initialInput = input("\nPress ENTER to continue\n")
+    if initialInput != "":
+        if initialInput.replace(" ", "") in "TheEntireBeeMovieScript":
             emohuehue();
-        if (initialInput == "emo66"):
+        if initialInput == "emo66":
             emohue();
     getSITS()
     print("")
