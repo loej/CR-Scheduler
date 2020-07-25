@@ -22,8 +22,8 @@ class Sups:
     def __init__(self, netID, schedule):
         self.netID = netID
         self.schedule = schedule
-        self.assignedCons = [];
-        self.noGoodCons = [];
+        self.assignedCons = []
+        self.noGoodCons = []
 
 
 class Shift:
@@ -99,7 +99,7 @@ def convert24DEPRECATED(str1, check):
             if int(str1[-4:-2]) > 0:
                 return int(str2) + 1
         return int(str2)
-    elif (int(str1[:colonIndex]) < 8):
+    elif int(str1[:colonIndex]) < 8:
         return 23;
     # Check if Start Time, then go to Ceiling
     if check == 1:
@@ -110,28 +110,28 @@ def convert24DEPRECATED(str1, check):
 
 def convert24(time, check):
     # start = 1 and end = 0
-    colonIndex = time.index(":");
-    hour = int(time[:colonIndex]);
-    minute = int(time[colonIndex + 1:-2]);
+    colonIndex = time.index(":")
+    hour = int(time[:colonIndex])
+    minute = int(time[colonIndex + 1:-2])
     if time[-2:] == "PM":
-        noon = True;
+        noon = True
     else:
-        noon = False;
+        noon = False
     # Checks if a shift ends in the morning when supervisors are not working
-    if (check == 0 and not (noon) and hour < 7) or (not (noon) and hour == 12):
-        return 23;
-    if (noon and hour == 12):
-        return 12;
+    if (check == 0 and not noon and hour < 7) or (not noon and hour == 12):
+        return 23
+    if noon and hour == 12:
+        return 12
     if minute > 30:
         if noon:
-            return hour + 13;
+            return hour + 13
         else:
-            return hour + 1;
+            return hour + 1
     else:
         if noon:
-            return hour + 12;
+            return hour + 12
         else:
-            return hour;
+            return hour
 
 
 # Populate2D Array for Sups.Schedule
@@ -168,9 +168,9 @@ def populate2D(arr, location, day, start, end):
 #
 def search(target, roster):
     for i in range(0, len(roster)):
-        if (target == roster[i].netID):
-            return [roster[i],i]
-    return [None,-1]
+        if target == roster[i].netID:
+            return [roster[i], i]
+    return [None, -1]
 
 
 # ------------------------------------->
@@ -183,7 +183,7 @@ def readCons():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         prev = ""
-        hoursCount = 0;
+        hoursCount = 0
         for row in csv_reader:  # Iterate through every row
             if line_count != 0:  # Make sure not the Top Column
                 # print(row[0])
@@ -194,7 +194,7 @@ def readCons():
                 if row[0] != prev:  # NetID is the same as last row
                     if prev != "":
                         consRoster.append(Cons(new.netID, new.schedule, hoursCount))
-                        hoursCount = 0;
+                        hoursCount = 0
                         prev = new.netID
                     new = Cons
                     #   print(row[0])
@@ -202,65 +202,63 @@ def readCons():
                     new.schedule = []
                 [temp1, temp2, temp3, temp4] = create_Shift(row[1], row[3], row[4], row[5])
                 new.schedule.append(Shift(temp1, temp2, temp3, temp4))  # Add Shift to the Schedule Array
-                hoursCount += temp4 - temp3;
+                hoursCount += temp4 - temp3
                 prev = new.netID
             line_count += 1
         consRoster.append(Cons(new.netID, new.schedule, hoursCount))
-        hoursCount = 0;
+        hoursCount = 0
 
 
 # Reads sups.csv file
 def readSups():
-    isSit = False
-    sit = Cons
-    sup = Sups
     hoursCount = 0
     tempList = []
     tempIdx = 0
-    tempNetID=0
+    tempNetID = 0
     rows, cols = (7, 25)
     tempListDouble = [[0 for i in range(cols)] for j in range(rows)]
     with open(".\\Sups.csv", 'r') as csv_file2:
         supListRaw = csv.reader(csv_file2, delimiter=',')
         line_count = 0
         prev = ""
-        tempCount=0;
+        tempCount = 0
         supList = list(supListRaw)
-        #next(supListRaw)
-        for idx in range (1,len(supList)):
+        for idx in range(1, len(supList)):
             if supList[idx][0] == "":
                 continue
             if supList[idx][0] in sitRoster:
-                [temp1, temp2, temp3, temp4] = create_Shift(supList[idx][1],supList[idx][3],supList[idx][4],supList[idx][5])
-                tempList.append(Shift(temp1,temp2,temp3,temp4))
+                [temp1, temp2, temp3, temp4] = create_Shift(supList[idx][1], supList[idx][3], supList[idx][4],
+                                                            supList[idx][5])
+                tempList.append(Shift(temp1, temp2, temp3, temp4))
                 hoursCount += temp4 - temp3
-                if idx+1 == len(supList) or supList[idx+1][0] != supList[idx][0]:
-                    [tempNetID,tempIdx] = search(supList[idx][0],consRoster)
-                    if tempNetID == None:
-                        consRoster.append(Cons(supList[idx][0],tempList,hoursCount))
+                if idx + 1 == len(supList) or supList[idx + 1][0] != supList[idx][0]:
+                    [tempNetID, tempIdx] = search(supList[idx][0], consRoster)
+                    if tempNetID is None:
+                        consRoster.append(Cons(supList[idx][0], tempList, hoursCount))
                     else:
                         consRoster[tempIdx].schedule.extend(tempList)
-                        consRoster[tempIdx].totalHours+=hoursCount
+                        consRoster[tempIdx].totalHours += hoursCount
                     tempList = []
                     hoursCount = 0
             else:
-                populate2D(tempListDouble, supList[idx][1],supList[idx][3],supList[idx][4],supList[idx][5])
-                if idx+1 == len(supList) or supList[idx+1][0] != supList[idx][0]:
-                    supRoster.append(Sups(supList[idx][0],tempListDouble))
+                populate2D(tempListDouble, supList[idx][1], supList[idx][3], supList[idx][4], supList[idx][5])
+                if idx + 1 == len(supList) or supList[idx + 1][0] != supList[idx][0]:
+                    supRoster.append(Sups(supList[idx][0], tempListDouble))
                     tempListDouble = [[0 for i in range(cols)] for j in range(rows)]
+
 
 # Prioritizes consultants using consRoster list.
 def priorotizeConsultants(lstCons):
-    tempSched=[]
-    tempSITSched=[]
+    tempSched = []
+    tempSITSched = []
     # List of all Scheduled consultants
     scheduledConsultants = []
     # List of all Unscheduled consultants
     unscheduledConsultants = []
     # Boolean value that is set to show if a supervisor works during valid hours.
-    workingDuringSup = False;
+    workingDuringSup = False
     # Empty dictionary to be populated below.
-    consDictionary = {};
+    consDictionary = {}
     # This for loop iterates through lstCons which in this case it's the @consRoster list
     for obj in range(len(lstCons)):
         # Variable that holds the schedule from the Cons() class
@@ -281,29 +279,23 @@ def priorotizeConsultants(lstCons):
             if (location and dayofWeek and startingShift and endShift) is None:
                 return 'ERROR: Please check the csv file.'
             # Checks for the threshold if a consultant is between working Supervisor hours.
-            elif (startingShift < endTime):
-                workingDuringSup = True;
+            elif startingShift < endTime:
+                workingDuringSup = True
         # Appends unscheduled Consultants netID, schedule, and total hours.
-        if (not (workingDuringSup)):
+        if not workingDuringSup:
             unscheduledConsultants.append(Cons(lstCons[obj].netID, lstCons[obj].schedule, lstCons[obj].totalHours))
         else:
             # Populates the empty dictionary with the netID and total hours.
-            consDictionary[objNetid] = lstCons[obj].totalHours;
-            workingDuringSup = False;
+            consDictionary[objNetid] = lstCons[obj].totalHours
+            workingDuringSup = False
     # Sorts the values inside the dictionary.
-    sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)));
+    sortedCons = dict(sorted(consDictionary.items(), key=operator.itemgetter(1)))
     # This for loop appends the keys from the dictionary into the scheduled consultants.
     for cons in sortedCons.keys():
         for i in range(len(lstCons)):
-            if (cons == lstCons[i].netID):
-                if cons in sitDict:
-                    tempSched=lstCons[i].schedule
-                    tempSITSched=sitDict[cons]
-                    tempSched.extend(tempSITSched[1:])
-                    scheduledConsultants.append(Cons(lstCons[i].netID, tempSched, lstCons[i].totalHours+tempSITSched[0]));
-                else:
-                    scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours));
-                break;
+            if cons == lstCons[i].netID:
+                scheduledConsultants.append(Cons(lstCons[i].netID, lstCons[i].schedule, lstCons[i].totalHours))
+                break
     # returns both lists inside a list.
     return [scheduledConsultants, unscheduledConsultants]
 
@@ -312,22 +304,22 @@ def priorotizeConsultants(lstCons):
 # Divide lengths of Sup and Cons to get threshold  for each supervisor
 # Go through cons list sequentially. For each cons, go through supervisor list.
 def Assignment():
-    [schedCons, unschedCons] = priorotizeConsultants(consRoster);
-    supD = {};
+    [schedCons, unschedCons] = priorotizeConsultants(consRoster)
+    supD = {}
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
     for cons in unschedCons:
         for sup in supRoster:
-            supD[sup.netID] = len(sup.assignedCons);
-        sortedSupD = dict(sorted(supD.items(), key=operator.itemgetter(1)));
+            supD[sup.netID] = len(sup.assignedCons)
+        sortedSupD = dict(sorted(supD.items(), key=operator.itemgetter(1)))
         for i in range(len(supRoster)):
             keyList = list(sortedSupD.keys())
-            if (keyList[0] == supRoster[i].netID):
-                supRoster[i].assignedCons.append(cons.netID);
-                break;
+            if keyList[0] == supRoster[i].netID:
+                supRoster[i].assignedCons.append(cons.netID)
+                break
     for sup in supRoster:
-        sup.assignedCons.sort();
+        sup.assignedCons.sort()
     # Outputs the results in a csv file.
     with open('Results.csv', 'w', newline='') as file:
         writer = csv.writer(file)
@@ -346,7 +338,7 @@ def ranking(consultant):
     # initalvalues for rankingArray
     for i in range(0, supCount):
         if consultant.netID in supRoster[i].noGoodCons:
-            rankingArray[i] = -999999;
+            rankingArray[i] = -999999
         else:
             rankingArray[i] = rankingArray[i] + (consultantThreshold - len(supRoster[i].assignedCons)) * 25
     for i in range(0, len(consultant.schedule)):
@@ -361,29 +353,31 @@ def ranking(consultant):
 
 
 def setConflicts():
-    tempSup = Sups;
-    tempIdx =0 ;
+    tempSup = Sups
+    tempIdx = 0
     with open(".\\Conflicts.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for r in csv_reader:  # Iterate through every row
             if len(r) < 1:
-                return;
+                return
             if r[0] in sitRoster:
                 continue
-            [tempSup,tempIdx] = search(r[0], supRoster)
-            if (tempSup == None):
+            [tempSup, tempIdx] = search(r[0], supRoster)
+            if tempSup is None:
                 raise ValueError(r[0].strip())
             else:
                 for b in range(1, len(r)):
                     tempSup.noGoodCons.append(r[b])
                     # print("Success")
+
+
 def getSITS():
     inputSITS = ""
     inputSITS = input("Input this semseter's SITs (separated by commas): ")
-    commaIndex = -1;
+    commaIndex = -1
     count = 0
     gucci = True
-    while (gucci):
+    while gucci:
         try:
             commaIndex = inputSITS.index(',')
         except ValueError:
@@ -409,60 +403,60 @@ if __name__ == '__main__':
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
     print("\t\tone supervisor per row. This list may be empty, but must exist.")
-    input("\nPress ENTER to continue\n");
+    input("\nPress ENTER to continue\n")
     getSITS()
     print("")
     try:
-        readCons();
+        readCons()
     except FileNotFoundError:
-        print("\nCONS File Does Not Exist");
+        print("\nCONS File Does Not Exist")
         print("Make sure it is named Cons.csv and in same folder as .exe")
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     except Exception as x:
-        print("\nUNKNOWN ERROR C");
-        print(x);
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        print("\nUNKNOWN ERROR C")
+        print(x)
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     try:
-        readSups();
+        readSups()
     except FileNotFoundError:
-        print("\nSUPS File Does Not Exist");
+        print("\nSUPS File Does Not Exist")
         print("Make sure it is named Sups.csv and in same folder as .exe")
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     except Exception as x:
-        print("\nUNKNOWN ERROR S");
-        print(x);
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        print("\nUNKNOWN ERROR S")
+        print(x)
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     try:
-        setConflicts();
+        setConflicts()
     except FileNotFoundError:
-        print("\nCONFLICTS File Does Not Exist");
+        print("\nCONFLICTS File Does Not Exist")
         print("Make sure it is named Conflicts.csv and in same folder as .exe")
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     except ValueError as sup:
         print("\nSupervisor", sup, "does not exist in roster")
         print("Please check Conflicts.csv")
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     except Exception as x:
-        print("\nUNKNOWN ERROR CS");
-        print(x);
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        print("\nUNKNOWN ERROR CS")
+        print(x)
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     try:
         Assignment()
     except PermissionError:
-        print("\nUnable to write to Results.csv");
-        print("Please close Results.csv if open");
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
+        print("\nUnable to write to Results.csv")
+        print("Please close Results.csv if open")
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
     except Exception as x:
-        print("\nUNKNOWN ERROR A");
-        print(x);
-        input("Press ENTER to exit");
-        sys.exit("ERROR");
-    input("\nPress ENTER to exit");
+        print("\nUNKNOWN ERROR A")
+        print(x)
+        input("Press ENTER to exit")
+        sys.exit("ERROR")
+    input("\nPress ENTER to exit")
