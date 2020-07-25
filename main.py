@@ -305,19 +305,17 @@ def priorotizeConsultants(lstCons):
 # Go through cons list sequentially. For each cons, go through supervisor list.
 def Assignment():
     [schedCons, unschedCons] = priorotizeConsultants(consRoster)
-    supD = {}
+    [tempIdx,tempMin] = [-1,-1]
     for i in range(0, len(schedCons)):
         supFocusedIndex = ranking(schedCons[i])
         supRoster[supFocusedIndex].assignedCons.append(schedCons[i].netID)
     for cons in unschedCons:
-        for sup in supRoster:
-            supD[sup.netID] = len(sup.assignedCons)
-        sortedSupD = dict(sorted(supD.items(), key=operator.itemgetter(1)))
-        for i in range(len(supRoster)):
-            keyList = list(sortedSupD.keys())
-            if keyList[0] == supRoster[i].netID:
-                supRoster[i].assignedCons.append(cons.netID)
-                break
+        [tempIdx, tempMin] = [-1, sys.maxsize]
+        for idx in range(0, len(supRoster)):
+            if len(supRoster[idx].assignedCons) < tempMin:
+                tempMin = len(supRoster[idx].assignedCons)
+                tempIdx = idx
+        supRoster[tempIdx].assignedCons.append(cons.netID)
     for sup in supRoster:
         sup.assignedCons.sort()
     # Outputs the results in a csv file.
@@ -367,8 +365,9 @@ def setConflicts():
                 raise ValueError(r[0].strip())
             else:
                 for b in range(1, len(r)):
-                    tempSup.noGoodCons.append(r[b])
-                    # print("Success")
+                    if r[b] != "":
+                        tempSup.noGoodCons.append(r[b])
+
 
 
 def getSITS():
