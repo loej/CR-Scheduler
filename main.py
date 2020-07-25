@@ -388,6 +388,7 @@ def getSITS():
 
 
 if __name__ == '__main__':
+    errorList = []
     print("Welcome to the CR Scheduler!!!")
     print("By: emo66, hs770, jfm203")
     print("Last update: emo66 July 25, 2020\n")
@@ -401,61 +402,41 @@ if __name__ == '__main__':
     print("\tContains conflicts of interest between supervisors and consultants")
     print("\tCreate a csv and enter a supervisor into the first cell of a row and input the conflicting consultants")
     print("\t\tinto the following cells on the same row. Repeat for other supervisors who have conflicts")
-    print("\t\tone supervisor per row. This list may be empty, but must exist.")
+    print("\t\tone supervisor per row.")
     input("\nPress ENTER to continue\n")
     getSITS()
     print("")
     try:
         readCons()
     except FileNotFoundError:
-        print("\nCONS File Does Not Exist")
-        print("Make sure it is named Cons.csv and in same folder as .exe")
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("ERROR: Cons.csv Not Found")
     except Exception as x:
-        print("\nUNKNOWN ERROR C")
-        print(x)
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("UNKNOWN ERROR C" + x)
     try:
         readSups()
     except FileNotFoundError:
-        print("\nSUPS File Does Not Exist")
-        print("Make sure it is named Sups.csv and in same folder as .exe")
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("ERROR: Sups.csv Not Found")
     except Exception as x:
-        print("\nUNKNOWN ERROR S")
-        print(x)
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("UNKNOWN ERROR S" + x)
     try:
         setConflicts()
     except FileNotFoundError:
-        print("\nCONFLICTS File Does Not Exist")
-        print("Make sure it is named Conflicts.csv and in same folder as .exe")
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        print("WARNING: Conflicts.csv Not Found")
     except ValueError as sup:
-        print("\nSupervisor", sup, "does not exist in roster")
-        print("Please check Conflicts.csv")
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        print("\nWARNING: Supervisor", sup, "does not exist in Roster. Please check Conflicts.csv and Sups.csv")
     except Exception as x:
-        print("\nUNKNOWN ERROR CS")
-        print(x)
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("UNKNOWN ERROR CF" + x)
     try:
-        Assignment()
+        if len(errorList) == 0:
+            Assignment()
     except PermissionError:
-        print("\nUnable to write to Results.csv")
-        print("Please close Results.csv if open")
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("ERROR: Unable to write to Results.csv. Close Results.csv if open.")
     except Exception as x:
-        print("\nUNKNOWN ERROR A")
-        print(x)
-        input("Press ENTER to exit")
-        sys.exit("ERROR")
+        errorList.append("UNKNOWN ERROR A" + x)
+    for err in errorList:
+        print(err)
     input("\nPress ENTER to exit")
+    if len(errorList) == 0:
+        sys.exit(0)
+    else:
+        sys.exit(len(errorList))
