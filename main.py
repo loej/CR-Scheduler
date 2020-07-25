@@ -428,7 +428,7 @@ if __name__ == '__main__':
     print("\t\tone supervisor per row. This list may be empty, but must exist.")
     initialInput = input("\nPress ENTER to continue\n")
     if initialInput != "":
-        if initialInput.replace(" ", "") in "TheEntireBeeMovieScript":
+        if initialInput.replace(" ", "").lower() in "theentirebeemoviescript":
             emohuehue();
         if initialInput == "emo66":
             emohue();
