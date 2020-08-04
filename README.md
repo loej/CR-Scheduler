@@ -9,18 +9,18 @@ This program schedules consultants and supervisors for a Consultant Review meeti
 - [Installation](#installation)
 - [Documentation](#documentation)
   - [Content](#content)
-    - [Definitions](#definitions)
-    - [create_Shift()](#create_shift)
-    - [convert24()](#convert24)
-    - [populate2D()](#populate2d)
-    - [search()](#search)
-    - [readCons()](#readcons)
-    - [readSups()](#readsups)
-    - [prioritizeConultants()](#prioritizeconultants)
-    - [Assignment()](#assignment)
-    - [readCSV()](#readcsv)
-    - [ranking()](#ranking)
-    - [setConflicts()](#setconflicts)
+  - [Definitions](#definitions)
+  - [create_Shift()](#create_shift)
+  - [convert24()](#convert24)
+  - [populate2D()](#populate2d)
+  - [search()](#search)
+  - [readCons()](#readcons)
+  - [readSups()](#readsups)
+  - [prioritizeConultants()](#prioritizeconultants)
+  - [Assignment()](#assignment)
+  - [readCSV()](#readcsv)
+  - [ranking()](#ranking)
+  - [setConflicts()](#setconflicts)
 
 ## Requirements
 
@@ -102,26 +102,25 @@ Locations :
 
 ### create_Shift()
 
-- wip
+- create_Shift() takes in the location, day of week, and the start and end of a shift. It filters each location and translates it to a numerical value as shown above. This method simply takes each case as a day of the week and translates it. Towards the end you should see that it converts the start and end dat to a 24-hour format. Finally, it returns the refined location, dayofWeek, and start and end in a 24-hour format as one list. 
 
 ### convert24()
 
-- wip
+- convert24() takes in a string and a time check. The string 'time' is indicated if the time is either the start or end. Conventionally, start = 1 and end = 0. The hour variable is an integer from the start of the list up to but not including the colon index. The minute starts from the colonIndex up to but not including -2 index of the list. The first if - else block checks if the index -2 contains "PM". If it doesn't it switches the boolean from T/F. The second if-else block uses the boolean check to convert the hours into a 24 hurs format. 
 
 ### populate2D()
 
-- wip
+- populate2D() populates an array for the supervisor schedules. It starts by converting the start and end time of the shifts to a 24-hour format using convert24(). For each day there is a a 2D array with both index representing the day. The first index is the day of the week starting with Sunday. The for-loop loops through the array index of j and sets all of j index to 1.
 
 ### search()
 
-- wip
+- search() is a helper method that takes in a target and a roster. It loops through the roster and if the target's netID is located then it returns the roster's index. If it doesn't it returns None and the last items in the list. 
 
 ### readCons()
 
-- wip
-
+- readCons() is a method that reads the Cons.csv. Using a for-loop, the iterated file checks for empty indexes, empty columns, and repeated netIDs. Once it completes each check it appends the netID, schedule, and hours to the consRoster. After, a new.NetID is initialized in row[0] and also creates a new list of the schedule. A list of temporary values are assigned to the create_shift() method to populate the rows. Then it is appended to the new schedule. 
+ 
 ### readSups()
-
 - wip
 
 ### prioritizeConultants()

@@ -77,12 +77,14 @@ def create_Shift(location, dayofWeek, start, end):
         s.dayofWeek = 5
     if dayofWeek == "Saturday":
         s.dayofWeek = 6
+    # Converts start and end time to 24 hours
     s.start = convert24(start, 1)
     s.end = convert24(end, 0)
+    # Returns data into one list
     return [s.location, s.dayofWeek, s.start, s.end]
 
 
-# Converting 12 Hour to 24 Hour Format
+# This code is no longer being used
 def convert24DEPRECATED(str1, check):
     # Checking if last two elements of time is AM
     if str1[-2:] == "PM":
