@@ -79,6 +79,8 @@ The CR Scheduler program contains:
   - [Assignment()](#assignment)
   - [ranking()](#ranking)
   - [setConflicts()](#setconflicts)
+  - [getSITs()](#getsits)
+  - [main()](#main)
 
 Each class and method will be documented thoroughly.
 
