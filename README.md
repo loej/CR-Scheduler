@@ -75,7 +75,7 @@ The CR Scheduler program contains:
   - [search()](#search)
   - [readCons()](#readcons)
   - [readSups()](#readsups)
-  - [prioritizeConultants()](#prioritizeconultants)
+  - [prioritizeConultants()](#prioritizeconultants) 
   - [Assignment()](#assignment)
   - [ranking()](#ranking)
   - [setConflicts()](#setconflicts)
